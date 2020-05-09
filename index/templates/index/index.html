@@ -1,0 +1,72 @@
+{% extends "index/base.html" %} 
+{% block content %}
+<div class='container pad-top'>
+    <!-- Icon Cards-->
+    <div class="row">
+      <div class="col-xl-6 col-sm-6 mb-3">
+        <div class="card text-white bg-primary o-hidden h-100">
+          <div class="card-body">
+            <div class="card-body-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="mr-5" id="eMails"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6 col-sm-6 mb-3">
+        <div class="card text-white bg-success o-hidden h-100">
+          <div class="card-body">
+            <div class="card-body-icon">
+              <i class="fas fa-envelope-open"></i>
+            </div>
+            <div class="mr-5" id="eMailRes"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DataTables Example -->
+    <div class="card mb-3">
+      <div class="card-header">
+        <i class="fas fa-table"></i>
+        <span class="header" style="font-size:24px">
+          eMail Response Tracking
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table refresh" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Recipeint Name </th>
+                <th>Recipient Facility</th>
+                <th>Has Responded </th>
+                <th>Survey Link </th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Recipeint Name </th>
+                <th>Recipient Facility</th>
+                <th>Has Responded </th>
+                <th>Survey Link </th>
+              </tr>
+            </tfoot>
+            <tbody>
+              {% for result in results %}
+                <tr>
+                  <td>{{ result.recipient.name }} </td>
+                  <td>{{ result.recipient.institution }} </td>
+                  <td>{{ result.hasresponded }} </td>
+                  <td>{{ result.recipient.survey_link }} </td>
+                  <!-- <td>{{ result.filename }} </td> -->
+                </tr>
+              {% endfor%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+{%endblock%}

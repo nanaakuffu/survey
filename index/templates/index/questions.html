@@ -1,0 +1,111 @@
+{% extends "index/base.html" %} 
+{% block content %}
+<div class="container pad-top">
+
+    <!-- DataTables Example -->
+    <div class="card mb-3">
+      <div class="card-header">
+        <span class="header" style="font-size:24px">
+          Survey Questions
+        </span>
+        <a href='#' class='btn btn-primary rounded-circle shadow float-right' data-toggle='modal' data-target='#AddModal' title='Add question Data'><i class='fas fa-plus'></i> </a>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Survey Question</th>
+                <th>Recommendation</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>ID</th>
+                <th>Survey Question</th>
+                <th>Recommendation</th>
+              </tr>
+            </tfoot>
+            <tbody>
+                {% for question in questions %}
+                <tr>
+                  <td><a href='#' data-toggle='modal' data-target='#qEditModal' data-id='{{ question.id }}'>{{ question.id }}</a></td>
+                  <td><a href='#' data-toggle='modal' data-target='#qEditModal' data-id='{{ question.id }}'>{{ question.question_text }}</a></td>
+                  <td><a href='#' data-toggle='modal' data-target='#qEditModal' data-id='{{ question.id }}'>{{ question.recommendation }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  
+  <!-- Beginning of Add Modal -->
+  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="AddModalLabel"> Add Question Data </h3>
+      </div>
+
+      <div class="modal-body">
+        <div class="box-body pad">
+          <form id="addForm" action="{% url 'savequestion' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class='form-group'>
+                <textarea type='text' class='form-control'  name='question_text' id='question_text' rows='5' placeholder='Question' required></textarea>
+            </div>
+            <div class='form-group'>
+                <textarea type='text' class='form-control'  name='recommendation' id='recommendation' rows='5' placeholder='Recommendation' required></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" form='addForm' id="addingData" value="addData"> Save Data </button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"> Cancel </button>
+        </div>
+
+    </div>
+  </div>
+  </div>
+  <!-- End of Add Modal -->
+
+  <!-- Beginning of Edit Modal -->
+  <div class="modal hide fade" id="qEditModal" tabindex="-1" data-focus-on="input:first" aria-hidden='true'>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="qEditModalLabel"> Edit Question Data </h3>
+        </div>
+
+        <div class="modal-body">
+          <div class="box-body pad">
+            <form id="editForm" action="{% url 'updatequestion' %}" method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                <input name='key' id="key" type='hidden' value=''>
+                <div class='form-group'>
+                    <textarea type='text' class='form-control'  name='question_text' id='e_question_text' rows='5' required></textarea>
+                </div>
+                <div class='form-group'>
+                    <textarea type='text' class='form-control'  name='recommendation' id='e_recommendation' rows='5' required></textarea>
+                </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" form="editForm" name="flag" value="update"> Update </button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"> Cancel </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- End of Edit Modal -->
+{%endblock%}
