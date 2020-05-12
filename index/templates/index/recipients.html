@@ -33,10 +33,10 @@
             <tbody>
               {% for recipient in recipients %}
               <tr>
-                <td><a href='#EditModal' data-table='rec' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.name }}</a></td>
-                <td><a href='#EditModal' data-table='rec' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.email }}</a></td>
-                <td><a href='#EditModal' data-table='rec' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.contact }}</a></td>
-                <td><a href='#EditModal' data-table='rec' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.institution }}</a></td>
+                <td><a href='#EditModal' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.name }}</a></td>
+                <td><a href='#EditModal' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.email }}</a></td>
+                <td><a href='#EditModal' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.contact }}</a></td>
+                <td><a href='#EditModal' data-toggle='modal' data-target='#EditModal' data-id='{{ recipient.id }}'>{{ recipient.institution }}</a></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -117,7 +117,7 @@
 
         <div class="modal-footer">
           <button class="btn btn-primary" type="submit" id="editingData" form="editForm" name="flag" value="update"> Update </button>
-          <button type="button" class="btn btn-primary" id="sendSurvey" form='surveyForm' value="sendData"> Send Survey </button>
+          <button type="button" class="btn btn-primary" id="sendSurvey" form='editForm' value="sendData"> Send Survey </button>
           <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"> Cancel </button>
         </div>
 

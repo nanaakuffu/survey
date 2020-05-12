@@ -1,0 +1,49 @@
+…or create a new repository on the command line
+echo "# survey" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/nanaakuffu/survey.git
+git push -u origin master
+                
+…or push an existing repository from the command line
+git remote add origin https://github.com/nanaakuffu/survey.git
+git push -u origin master
+
+
+//   $.post(
+  //     "/research/send_survey",
+  //     {sendID : sendID,  sendeMail : sendeMail},
+  //     function (data) {
+  //       // var myobj = JSON.parse(data);
+
+  //       loadingDialog.Remove();
+
+  //       switch (data.status) {
+  //         case "success":
+  //           reportDialog.Success('Survey Feedback', 'Survey sent successfully.', 'Great');
+  //           break;
+
+  //         case "double":
+  //           reportDialog.Failure('Survey Feedback',
+  //             'This recipient has already been served a survey',
+  //             'Ok! Got it'
+  //           );
+  //           break;
+        
+  //         default:
+  //           for (var variable in myobj) {
+  //             if (variable != "status") {
+  //               errMess = errMess + myobj[variable];
+  //             }
+  //           }
+  //           reportDialog.Failure('Survey Feedback',
+  //             `Sending mail was unsuccessful. The following mail was not sent; ${errMess}. This is normally due to bad internet connection.`,
+  //             'Ok! Got it'
+  //           );
+  //           break;
+  //       }
+  //     },
+  //     'json'
+  //   );
+  // });

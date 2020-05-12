@@ -51,6 +51,27 @@ Notiflix.Loading.Init({
   messageColor: '#dcdcdc', 
 }); 
 
+function csrfSafeMethod(method) {
+  // these HTTP methods do not require CSRF protection
+  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = jQuery.trim(cookies[i]);
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
 function reLoad() {
   let reFresh = setTimeout(reLoad, 5000);
   $.getJSON("/home", "", function(data) {
@@ -213,8 +234,12 @@ $(function(){
   $("#sendSurvey").on("click", function (e) {
     // alert($("#key").val());
     let sendID = $("#key").val();
-    let sendeMail = $("#recipient_email_address").val();
+    let sendeMail = $("#e_email").val();
     let errMess = "";
+
+    let csrftoken = getCookie('csrftoken');
+
+    // alert(sendeMail);
 
     $("#EditModal").modal("hide");
 
@@ -222,14 +247,19 @@ $(function(){
 
     $.ajax({
       type: "POST",
-      url: "_send_survey.php",
-      data: "sendID="+ sendID + "&sendeMail="+ sendeMail + "&send_survey=send_survey",
+      url: "/research/send_survey",
+      data: {"sendID": sendID, "sendeMail" : sendeMail},
+      dataType: 'json',
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      },
       success: function (data) {
-        var myobj = JSON.parse(data);
-
+        // alert(data.link)
         loadingDialog.Remove();
 
-        switch (myobj.status) {
+        switch (data.status) {
           case "success":
             reportDialog.Success('Survey Feedback', 'Survey sent successfully.', 'Great');
             break;
@@ -242,9 +272,9 @@ $(function(){
             break;
         
           default:
-            for (var variable in myobj) {
+            for (var variable in data) {
               if (variable != "status") {
-                errMess = errMess + myobj[variable];
+                errMess = errMess + data[variable];
               }
             }
             reportDialog.Failure('Survey Feedback',

@@ -6,6 +6,7 @@ from answer.models import Answer
 # Create your models here.
 class Survey(models.Model):
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
+    survey_id = models.IntegerField()
     date_sent = models.DateField()
     hasresponded = models.IntegerField()
     date_responded = models.DateField()
