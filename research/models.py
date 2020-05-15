@@ -23,3 +23,11 @@ class Response(models.Model):
 
     def __str__(self):
         return self.survey
+
+class QuestionsAndAnswers(models.Model):
+    question_col = models.CharField()
+    answers_col = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'survey_vw'

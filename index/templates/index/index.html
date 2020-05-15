@@ -40,7 +40,9 @@
               <tr>
                 <th>Recipeint Name </th>
                 <th>Recipient Facility</th>
+                <th>Date Sent</th>
                 <th>Has Responded </th>
+                <th>Date Responded</th>
                 <th>Survey Link </th>
               </tr>
             </thead>
@@ -48,7 +50,9 @@
               <tr>
                 <th>Recipeint Name </th>
                 <th>Recipient Facility</th>
+                <th>Date Sent</th>
                 <th>Has Responded </th>
+                <th>Date Responded</th>
                 <th>Survey Link </th>
               </tr>
             </tfoot>
@@ -57,9 +61,10 @@
                 <tr>
                   <td>{{ result.recipient.name }} </td>
                   <td>{{ result.recipient.institution }} </td>
-                  <td>{{ result.hasresponded }} </td>
+                  <td>{{ result.date_sent }}</td>
+                  <td>{% if result.hasresponded == 1 %} Yes {% else %} No {% endif %} </td>
+                  <td>{% if result.date_responded %} {{ result.date_responded }} {% else %} Not yet {% endif %}</td>
                   <td>{{ result.recipient.survey_link }} </td>
-                  <!-- <td>{{ result.filename }} </td> -->
                 </tr>
               {% endfor%}
             </tbody>
