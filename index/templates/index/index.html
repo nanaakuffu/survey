@@ -62,8 +62,8 @@
                   <td>{{ result.recipient.name }} </td>
                   <td>{{ result.recipient.institution }} </td>
                   <td>{{ result.date_sent }}</td>
-                  <td>{% if result.hasresponded == 1 %} Yes {% else %} No {% endif %} </td>
-                  <td>{% if result.date_responded %} {{ result.date_responded }} {% else %} Not yet {% endif %}</td>
+                  <td>{{ result.hasresponded|yesno:"Yes,No" }} </td>
+                  <td>{{ result.date_responed|default:"Not yet" }}</td>
                   <td>{{ result.recipient.survey_link }} </td>
                 </tr>
               {% endfor%}

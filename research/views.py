@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
-from .models import Answer, Question, Survey, Response, Recipient
+from .models import Answer, Question, Survey, Response, Recipient, QuestionsAndAnswers
 from django.conf import settings
 from django.core.mail import send_mail
 from random import randint
@@ -15,7 +15,7 @@ def send_survey(request):
         recipient = request.POST.get('sendeMail')
         sID = str(randint(1000000, 9999999))
         sender = settings.EMAIL_HOST_USER
-        survey_link = "http://localhost:8000/research?id="+iD+"&sid="+sID+"&mid="+recipient
+        survey_link = "http://localhost:8000/research/survey?id="+iD+"&sid="+sID+"&mid="+recipient
 
         email_message = "<p> Dear Sir/Madam, </p> \
                    <p> PharmAccess Ghana welcomes you to its self-administered basic quality assessment tool. </p> \
@@ -47,9 +47,19 @@ def send_survey(request):
 
 
 def get_questions(request):
-    # qIDs = Question.objects.values('id')
-    # questions_keys = ['question', 'A', 'B', 'C', 'D']
-    # d = {}
-    # for id in qIDs:
-    #     sIDs = Answer.objects.get(question.id = id).values('id', 'question').order_by('choice')
+    survey_form = QuestionsAndAnswers.objects.all().only('question_text', 'answers')
+    surveyID = request.GET.get('sid')
+    survey = Survey.objects.get(survey_id = surveyID)
+    eMail = request.GET.get('mid')
+    recipientID = request.GET.get('id')
+    recipients = Recipient.objects.filter(id = recipientID).count()
+    surveyDate = date.today()
+    context = {'survey_form' : survey_form, 'recipient' : recipientID, 
+                'email': eMail, 'survey' : surveyID, 'survey_date' : surveyDate,
+                'hasResponded' : survey.hasresponded, 'recipientExists' : recipients }
+    return render(request, "index/survey.html", context=context)
+
+
+def process_survey(request):
     pass
+    

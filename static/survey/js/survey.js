@@ -211,8 +211,8 @@ $(function(){
       // Send the survey
       $.ajax({
         method: "POST",
-        url: "_process_survey.php",
-        data: formData + "&sendResponse=Yes",
+        url: "/research/process_survey",
+        data: formData,
         type: "json",
         success: function(responseData) {
           let obj = JSON.parse(responseData);

@@ -2,6 +2,7 @@ from django.db import models
 from recipient.models import Recipient
 from question.models import Question
 from answer.models import Answer
+from django_mysql.models import JSONField
 
 # Create your models here.
 class Survey(models.Model):
@@ -25,8 +26,8 @@ class Response(models.Model):
         return self.survey
 
 class QuestionsAndAnswers(models.Model):
-    question_col = models.CharField()
-    answers_col = models.TextField()
+    question_text = models.CharField(max_length=200)
+    answers = JSONField()
 
     class Meta:
         managed = False

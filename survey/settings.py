@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_static_fontawesome',
+    'django_mysql',
     'index.apps.IndexConfig',
     'recipient.apps.RecipientConfig',
     'question.apps.QuestionConfig',
@@ -87,6 +88,15 @@ DATABASES = {
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': '127.0.0.1',
+        'OPTIONS': {
+            # Tell MySQLdb to connect with 'utf8mb4' character set
+            'charset': 'utf8mb4',
+        },
+        # Tell Django to build the test database with the 'utf8mb4' character set
+        'TEST': {
+            'CHARSET': 'utf8mb4',
+            'COLLATION': 'utf8mb4_unicode_ci',
+        }
     }
 }
 
