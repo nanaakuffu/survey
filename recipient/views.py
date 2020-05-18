@@ -2,14 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from recipient.models import Recipient
 from django.forms.models import model_to_dict
-from .form import RecipientForm
+# from .form import RecipientForm
 import json
 
 # Create your views here.
 def recipients(request):
     recipients = Recipient.objects.all()
-    form = RecipientForm()
-    return render(request, 'index/recipients.html', {'recipients' : recipients, 'form' : form})
+    # form = RecipientForm()
+    return render(request, 'index/recipients.html', {'recipients' : recipients})
 
 def show(request):
     if request.is_ajax():

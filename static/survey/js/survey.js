@@ -278,7 +278,7 @@ $(function(){
               }
             }
             reportDialog.Failure('Survey Feedback',
-              `Sending mail was unsuccessful. The following mail was not sent; ${errMess}. This is normally due to bad internet connection.`,
+              `Sending mail failed. The following mail was not sent; ${errMess}. This is normally due to bad internet connection.`,
               'Ok! Got it'
             );
             break;
