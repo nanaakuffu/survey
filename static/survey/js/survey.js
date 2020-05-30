@@ -204,27 +204,27 @@ $(function(){
 
     let formData = $("#surveyResponseForm").serialize();
 
-    if (formData.split("&").length == 26) {
+    // alert(formData);
+
+    if (formData.split("&").length == 27) {
       // Start the indicator
       loadingDialog.Circle();
 
       // Send the survey
       $.ajax({
         method: "POST",
-        url: "/research/process_survey",
+        url: "/research/process",
         data: formData,
         type: "json",
         success: function(responseData) {
-          let obj = JSON.parse(responseData);
-
           loadingDialog.Remove();
 
-          if (obj.status != 200) {
+          if (responseData.status != 200) {
             reportDialog.Failure('Survey Feedback', 
-                                 `${obj.message}. Meaning: Your responses could not be sent. It may be due to bad internet connection or wrong email address. Please contact PharmAccess for help`, 
+                                 `${responseData.message}. Meaning: Your responses could not be sent. It may be due to bad internet connection or wrong email address. Please contact PharmAccess for help`, 
                                  'Ok! Thanks.')
           } else {
-            window.location.href = "sent_page.php";
+            window.location.href = "/research/sent";
           }          
         }
       });
