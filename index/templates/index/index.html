@@ -63,7 +63,7 @@
                   <td>{{ result.recipient.institution }} </td>
                   <td>{{ result.date_sent }}</td>
                   <td>{{ result.hasresponded|yesno:"Yes,No" }} </td>
-                  <td>{{ result.date_responed|default:"Not yet" }}</td>
+                  <td>{{ result.date_responded|default:"Not yet" }}</td>
                   <td>{{ result.recipient.survey_link }} </td>
                 </tr>
               {% endfor%}
