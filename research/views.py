@@ -5,6 +5,10 @@ from django.forms.models import model_to_dict
 from .models import Answer, Question, Survey, Response, Recipient, QuestionsAndAnswers
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+
+from research.printing import PDF
+from io import BytesIO
 
 # Non django related modules
 from matplotlib.pyplot import plot as plt
@@ -87,33 +91,76 @@ def process_survey(request):
         rID = request.POST.get('recipient_id')
         sID = request.POST.get('survey_id')
 
+        exceptionList = ['survey_id', 'recipient_id', 'survey_date', 'email', 'csrfmiddlewaretoken']
+
         # Get the recipient and survey corresponding data
         recipient = Recipient.objects.get(id=rID)
         survey = Survey.objects.get(survey_id=sID)
+        counter = 1
 
         # Get the answers that needs recommendation
         needsRecommendation = {}
         for key, value in request.POST.items():
-            if key not in ['survey_id', 'recipient_id', 'survey_date', 'email']:
+            tmpList = []
+            if key not in exceptionList:
+                question = Question.objects.get(id=key)
                 answer = Answer.objects.get(id=value)
                 if answer.needs_recommendation == 1:
-                    needsRecommendation[key] = value
+                    tmpList.append(question.question_text)
+                    tmpList.append(answer.answer)
+                    tmpList.append(question.recommendation)
+                    needsRecommendation[counter] = tmpList
+                    counter += 1
+
+        fileName = './static/survey/files/' + '_'.join(str(recipient.institution).split()) + '.pdf'
 
         # Print those which needs recommendation to pdf
+        report = PDF(fileName, 'A4')
+        isPDFCreated = report.makePDF(needsRecommendation)
 
-        # Save the results from the form to the database
-        responses = Response()
-        for key, value in request.POST.items():
-            responses.question = Question.objects.get(id=key)
-            responses.answer = Answer.objects.get(id=value)
-            responses.recipient = recipient
-            responses.survey = survey.id
-            responses.save()
+        if isPDFCreated:
+            # Send a mail to the person who filled the survey with an attachment
+            surveySubject = "MyBQualityScan"
+            surveyMessage = "<p> Dear Sir/Madam, </p> \
+                            <p> Kindly find attached a detailed recommendation based on your answers to the questions in the survey.</p> \
+                            <p> Please carefully peruse this document and where necessary apply the suggested recommendations.</p> \
+                            <br /> \
+                            <p> Regards,</p>"
 
-        # Update the survey details by adding the pdf filename and indicating that respondent has responded.
-        survey.hasresponded = 1
-        survey.date_responded = date.today()
-        survey.file_name = ""
-        survey.save()
-    pass
+            surveyFrom = settings.EMAIL_HOST_USER
+            surveyTo = [request.POST.get('email')]
+
+            surveyEmail = EmailMessage(subject=surveySubject, 
+                                       body=surveyMessage, 
+                                       from_email=surveyFrom, 
+                                       to=surveyTo)
+            surveyEmail.attach_file(fileName)
+            surveyEmail.content_subtype = "html"
+
+            surveyEmail.send(fail_silently=False)
+
+            # Save the results from the form to the database
+            for key, value in request.POST.items():
+                responses = Response()
+                if key not in exceptionList:
+                    responses.question = Question.objects.get(id=key)
+                    responses.answer = Answer.objects.get(id=value)
+                    responses.recipient = recipient
+                    responses.survey = survey
+                    responses.save()
+
+            # Update the survey details by adding the pdf filename and indicating that respondent has responded.
+            survey.hasresponded = 1
+            survey.date_responded = date.today()
+            survey.file_name = fileName.split('/')[-1]
+            survey.save()
+
+            data = {'status': 200 }
+        else:
+            data = {'status' : 400, "message" : "Mail Sending Error"}
     
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def sent_page(request):
+    return render(request, 'index/sent_page.html')
