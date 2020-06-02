@@ -1,0 +1,17 @@
+{% extends "index/base.html" %} 
+{% block content %}
+<div class="container pad-top">
+    <div class="card-header">
+      <span style="font-size:24px"> Survey Analytics </span>
+    </div>
+    <ol class="ansteps">
+        {% for item in analytics %}
+          <li><p style="font-weight:400;"> {{ item.question_text }} </p></li>
+          <div class='chart-container'>
+            <canvas class="chart"></canvas>
+          </div>
+        {% endfor %}
+    </ol>
+    <br />
+</div>
+{%endblock%}

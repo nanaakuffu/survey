@@ -414,19 +414,17 @@ $(function(){
     }
   });
 
-  $('.chart').each(function (index, element) {
-    var ctx = element.getContext('2d');
-
-    let qID = $(element).attr("id");
-
-    $.getJSON(
-      "_data_processor.php",
-      "flag=getAnalytics&key=" + qID,
-      function (data) {
-        plotChart(data, ctx);
-      }
-    );
-  });
+  $.getJSON(
+    "/research/analytics",
+    function (data) {
+      $('.chart').each(function (index, element) {
+        var ctx = element.getContext('2d');
+        // The data serialize by django serialise comes in the format
+        // Hence we access it this way
+        plotChart(data[index].fields.responses, ctx);
+      });
+    }
+  );
 
   reLoad();
 });

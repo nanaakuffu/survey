@@ -2,13 +2,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
-from .models import Answer, Question, Survey, Response, Recipient, QuestionsAndAnswers
+from .models import Answer, Question, Survey, Response, Recipient
+from research.models import QuestionsAndAnswers, Analytics
 from django.conf import settings
-from django.core.mail import send_mail
 from django.core.mail import EmailMessage
+from django.db.models import Count
+from django.core import serializers
 
 from research.printing import PDF
-from io import BytesIO
 
 # Non django related modules
 from matplotlib.pyplot import plot as plt
@@ -21,24 +22,30 @@ import json
 # Create your views here.
 def send_survey(request):
     if request.is_ajax():
-        iD = request.POST.get('sendID')
-        recipient = request.POST.get('sendeMail')
-        sID = str(randint(1000000, 9999999))
+        recipientID = request.POST.get('sendID')
+        recipientEmail = [request.POST.get('sendeMail')]
+        surveyID = str(randint(1000000, 9999999))
         sender = settings.EMAIL_HOST_USER
-        survey_link = "http://localhost:8000/research/survey?id="+iD+"&sid="+sID+"&mid="+recipient
+        survey_link = "http://localhost:8000/research/survey?id="+recipientID+"&sid="+surveyID+"&mid="+recipientEmail[0]
 
         email_message = "<p> Dear Sir/Madam, </p> \
-                   <p> PharmAccess Ghana welcomes you to its self-administered basic quality assessment tool. </p> \
-                   <p> We invite you to take this quick (15 minutes) survey about your health facility to objectively evaluate some basic quality issues by clicking on the link below </p> \
-                   <p>"+survey_link+"</p>"
+                         <p> PharmAccess Ghana welcomes you to its self-administered basic quality assessment tool. </p> \
+                         <p> We invite you to take this quick (15 minutes) survey about your health facility to objectively evaluate some basic quality issues by clicking on the link below </p> \
+                         <p>"+survey_link+"</p>"
         subject = "MyBQualityScan Survey"
 
+        messageEmail = EmailMessage(subject=subject,
+                                    body=email_message, 
+                                    from_email=sender, 
+                                    to=recipientEmail)
+        messageEmail.content_subtype = 'html'
+
         # Check if the recipient has already been served a survey
-        if Survey.objects.filter(recipient=iD).count() == 0: 
+        if Survey.objects.filter(recipient=recipientID).count() == 0: 
             # If no try sending the survey but if not report double
-            if send_mail(subject=subject, message=email_message, from_email=sender, recipient_list=[recipient], html_message=email_message):
-                # Svae the link in the recipient table
-                recipientObj = Recipient.objects.get(id=iD)
+            if messageEmail.send():
+                # Save the link in the recipient table
+                recipientObj = Recipient.objects.get(id=recipientID)
                 recipientObj.survey_link = survey_link
                 recipientObj.save()
 
@@ -47,7 +54,7 @@ def send_survey(request):
                 survey.recipient = recipientObj
                 survey.date_sent = date.today()
                 survey.hasresponded = 0
-                survey.survey_id = sID
+                survey.survey_id = int(surveyID)
                 survey.save()
 
                 # Send the response to the  ajax and then to template
@@ -72,7 +79,8 @@ def get_questions(request):
         survey = Survey.objects.get(survey_id = surveyID)
         eMail = request.GET.get('mid')
         recipientID = request.GET.get('id')
-        recipients = Recipient.objects.filter(id = recipientID).count()
+        # If 1 then recipient exist else no
+        recipientExists = Recipient.objects.filter(id = recipientID).count()
         
         # Set the date for the durvey
         surveyDate = date.today()
@@ -80,7 +88,7 @@ def get_questions(request):
         # Create the context for the template
         context = { 'survey_form' : surveyQuestions, 'recipient' : recipientID, 
                     'email': eMail, 'survey' : surveyID, 'survey_date' : surveyDate,
-                    'hasResponded' : survey.hasresponded, 'recipientExists' : recipients }
+                    'hasResponded' : survey.hasresponded, 'recipientExists' : recipientExists }
 
         # Send info to the template
         return render(request, "index/survey.html", context=context)
@@ -98,7 +106,12 @@ def process_survey(request):
         survey = Survey.objects.get(survey_id=sID)
         counter = 1
 
-        # Get the answers that needs recommendation
+        # Get the data that needs recommendation and that would be put on the pdf
+        headers = {}
+        headers['name'] = recipient.name
+        headers['facility'] = recipient.institution
+        headers['date'] = request.POST.get('survey_date')
+        
         needsRecommendation = {}
         for key, value in request.POST.items():
             tmpList = []
@@ -116,7 +129,7 @@ def process_survey(request):
 
         # Print those which needs recommendation to pdf
         report = PDF(fileName, 'A4')
-        isPDFCreated = report.makePDF(needsRecommendation)
+        isPDFCreated = report.makePDF(headers, needsRecommendation)
 
         if isPDFCreated:
             # Send a mail to the person who filled the survey with an attachment
@@ -164,3 +177,17 @@ def process_survey(request):
 
 def sent_page(request):
     return render(request, 'index/sent_page.html')
+
+def get_analytics(request):
+    if request.is_ajax():
+        query = Analytics.objects.all().only('responses')
+
+        analyticsData = serializers.serialize('json', query)
+        
+        return HttpResponse(analyticsData, content_type='application/json')
+    else:
+        analyticsData = Analytics.objects.all().only('question_text')
+
+        context = {'analytics' : analyticsData}
+
+        return render(request, "index/analytics.html", context=context)

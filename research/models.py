@@ -32,3 +32,11 @@ class QuestionsAndAnswers(models.Model):
     class Meta:
         managed = False
         db_table = 'survey_vw'
+
+class Analytics(models.Model):
+    question_text = models.CharField(max_length=200)
+    responses = JSONField()
+
+    class Meta:
+        managed = False
+        db_table = 'analytics_vw'
