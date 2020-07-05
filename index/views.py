@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Case, When
 from django.http import HttpResponse
-from research.models import Survey
+from survey.models import Survey
 import json
 
 # Create your views here.

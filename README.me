@@ -58,8 +58,40 @@ question_question q,
 ) as answer from answer_answer v group by question_id) a
 where q.id = a.question_id
 
+// A way
+select q.id, q.question_text, json_arrayagg( json_object(x.choice, x.frequency)) as responses from question_question q, 
+(select question_id, choice, count(choice) as frequency from answer_answer group by question_id, choice) x where q.id = x.question_id group by q.id
+
+// The way
+select q.id, q.question_text, json_arrayagg(json_object(x.choice, x.frequency)) as responses from 
+question_question q,
+(select a.question_id, a.choice, count(r.answer_id) as frequency 
+ from answer_answer a
+ left join survey_response r
+ on a.id = r.answer_id 
+ group by a.question_id, choice) x
+where q.id = x.question_id
+group by q.id
+
+//Better
+select q.id, q.question_text, json_objectagg(x.choice, x.frequency) as responses from 
+question_question q,
+(select a.question_id, a.choice, count(r.answer_id) as frequency 
+ from answer_answer a
+ left join survey_response r
+ on a.id = r.answer_id 
+ group by a.question_id, choice) x
+where q.id = x.question_id
+group by q.id, q.question_text
+
 {% if result.hasresponded == 1 %} Yes {% else %} No {% endif %}
 
+data.forEach(element => {
+  for (let i in element) {
+    dataLabels.push(i);
+    dataValues.push(element[i]);
+  }
+});
 
 <body id='page-top'>
     <!-- <?php if ($db->dataExists("recipients", "recipient_id", $_GET['id']) and !$hasResponded) { ?> -->

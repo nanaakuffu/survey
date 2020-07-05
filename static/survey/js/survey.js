@@ -3,6 +3,7 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 
 function plotChart(data, ctx) {
   let dataLabels = [], dataValues = [];
+  
   for (let i in data) {
     dataLabels.push(i);
     dataValues.push(data[i]);
@@ -213,7 +214,7 @@ $(function(){
       // Send the survey
       $.ajax({
         method: "POST",
-        url: "/research/process",
+        url: "/survey/process",
         data: formData,
         type: "json",
         success: function(responseData) {
@@ -224,7 +225,7 @@ $(function(){
                                  `${responseData.message}. Meaning: Your responses could not be sent. It may be due to bad internet connection or wrong email address. Please contact PharmAccess for help`, 
                                  'Ok! Thanks.')
           } else {
-            window.location.href = "/research/sent";
+            window.location.href = "/survey/sent";
           }          
         }
       });
@@ -247,7 +248,7 @@ $(function(){
 
     $.ajax({
       type: "POST",
-      url: "/research/send_survey",
+      url: "/survey/send_survey",
       data: {"sendID": sendID, "sendeMail" : sendeMail},
       dataType: 'json',
       beforeSend: function(xhr, settings) {
@@ -415,7 +416,7 @@ $(function(){
   });
 
   $.getJSON(
-    "/research/analytics",
+    "/survey/analytics",
     function (data) {
       $('.chart').each(function (index, element) {
         var ctx = element.getContext('2d');

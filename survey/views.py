@@ -3,13 +3,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
 from .models import Answer, Question, Survey, Response, Recipient
-from research.models import QuestionsAndAnswers, Analytics
+from survey.models import QuestionsAndAnswers, Analytics
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.db.models import Count
 from django.core import serializers
 
-from research.printing import PDF
+from survey.printing import PDF
 
 # Non django related modules
 from matplotlib.pyplot import plot as plt
@@ -26,7 +26,7 @@ def send_survey(request):
         recipientEmail = [request.POST.get('sendeMail')]
         surveyID = str(randint(1000000, 9999999))
         sender = settings.EMAIL_HOST_USER
-        survey_link = "http://localhost:8000/research/survey?id="+recipientID+"&sid="+surveyID+"&mid="+recipientEmail[0]
+        survey_link = "http://localhost:8000/survey/survey?id="+recipientID+"&sid="+surveyID+"&mid="+recipientEmail[0]
 
         email_message = "<p> Dear Sir/Madam, </p> \
                          <p> PharmAccess Ghana welcomes you to its self-administered basic quality assessment tool. </p> \
@@ -156,10 +156,12 @@ def process_survey(request):
             for key, value in request.POST.items():
                 responses = Response()
                 if key not in exceptionList:
+                    answer = Answer.objects.get(id=value)
                     responses.question = Question.objects.get(id=key)
-                    responses.answer = Answer.objects.get(id=value)
+                    responses.answer = answer
                     responses.recipient = recipient
                     responses.survey = survey
+                    responses.choice = answer.choice
                     responses.save()
 
             # Update the survey details by adding the pdf filename and indicating that respondent has responded.
@@ -179,15 +181,10 @@ def sent_page(request):
     return render(request, 'index/sent_page.html')
 
 def get_analytics(request):
+    query = Analytics.objects.all()
     if request.is_ajax():
-        query = Analytics.objects.all().only('responses')
-
         analyticsData = serializers.serialize('json', query)
-        
         return HttpResponse(analyticsData, content_type='application/json')
     else:
-        analyticsData = Analytics.objects.all().only('question_text')
-
-        context = {'analytics' : analyticsData}
-
+        context = {'analytics' : query}
         return render(request, "index/analytics.html", context=context)

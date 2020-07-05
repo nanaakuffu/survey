@@ -21,6 +21,7 @@ class Response(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    choice = models.CharField(max_length=1, default=0)
 
     def __str__(self):
         return self.survey

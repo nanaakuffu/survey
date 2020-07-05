@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "db_survey",
+            "driver": "MySQL",
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "name": "localhost",
+            "password": "admin",
+            "port": 3306,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "admin"
+        }
+    ]
+}

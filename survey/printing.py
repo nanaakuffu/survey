@@ -1,4 +1,4 @@
-from survey.settings import STATICFILES_DIRS
+from mybqualityscan.settings import STATICFILES_DIRS
 
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, HRFlowable, Spacer, Image
