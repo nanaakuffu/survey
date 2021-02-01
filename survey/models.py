@@ -4,6 +4,7 @@ from question.models import Question
 from answer.models import Answer
 from django_mysql.models import JSONField
 
+
 # Create your models here.
 class Survey(models.Model):
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
@@ -16,6 +17,7 @@ class Survey(models.Model):
     def __str__(self):
         return self.recipient
 
+
 class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
@@ -26,6 +28,7 @@ class Response(models.Model):
     def __str__(self):
         return self.survey
 
+
 class QuestionsAndAnswers(models.Model):
     question_text = models.CharField(max_length=200)
     answers = JSONField()
@@ -33,6 +36,7 @@ class QuestionsAndAnswers(models.Model):
     class Meta:
         managed = False
         db_table = 'survey_vw'
+
 
 class Analytics(models.Model):
     question_text = models.CharField(max_length=200)
