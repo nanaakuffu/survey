@@ -150,3 +150,6 @@ EMAIL_HOST_USER = "survey@mybqualityscansafecaregh.com"
 EMAIL_HOST_PASSWORD = "P@s5W0rd"
 EMAIL_PORT = "587"
 EMAIL_USE_TLS = True
+
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'

@@ -14,9 +14,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Analytics',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('question_text', models.CharField(max_length=200)),
-                ('responses', django_mysql.models.JSONField(default=dict)),
+                ('responses', models.JSONField(default=dict)),
             ],
             options={
                 'db_table': 'analytics_vw',

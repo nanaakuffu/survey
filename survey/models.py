@@ -2,7 +2,7 @@ from django.db import models
 from recipient.models import Recipient
 from question.models import Question
 from answer.models import Answer
-from django_mysql.models import JSONField
+from django.db.models import JSONField
 
 
 # Create your models here.

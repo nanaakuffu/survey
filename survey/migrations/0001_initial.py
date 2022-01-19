@@ -19,9 +19,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Analytics',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('question_text', models.CharField(max_length=200)),
-                ('responses', django_mysql.models.JSONField(default=dict)),
+                ('responses', django.db.models.JSONField(default=dict)),
             ],
             options={
                 'db_table': 'analytics_vw',
@@ -31,9 +32,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='QuestionsAndAnswers',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('question_text', models.CharField(max_length=200)),
-                ('answers', django_mysql.models.JSONField(default=dict)),
+                ('answers', django.db.models.JSONField(default=dict)),
             ],
             options={
                 'db_table': 'survey_vw',
@@ -43,23 +45,30 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Survey',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('survey_id', models.IntegerField()),
                 ('date_sent', models.DateField()),
                 ('hasresponded', models.IntegerField()),
                 ('date_responded', models.DateField()),
                 ('file_name', models.CharField(max_length=50)),
-                ('recipient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='recipient.Recipient')),
+                ('recipient', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='recipient.Recipient')),
             ],
         ),
         migrations.CreateModel(
             name='Response',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('answer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='answer.Answer')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='question.Question')),
-                ('recipient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='recipient.Recipient')),
-                ('survey', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='survey.Survey')),
+                ('id', models.AutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('answer', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='answer.Answer')),
+                ('question', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='question.Question')),
+                ('recipient', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='recipient.Recipient')),
+                ('survey', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='survey.Survey')),
             ],
         ),
     ]
