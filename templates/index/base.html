@@ -1,103 +1,173 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Survey</title>
-        <meta name="google" content="notranslate" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/w3.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/bootstrap.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/jquery-editable-select.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/dataTables.bootstrap4.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/css/all.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/app/fonts.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/app/survey.css' %}" />
-    </head>
+<html lang="en-US">
 
-    <body id='page-top'>
-        <nav class='navbar navbar-expand-sm navbar-dark bg-dark fixed-top shadow'>
-            <div class='container'>
-              <a class='navbar-brand' href="{% url 'index' %}"><i class='fas fa-home'></i> MyBQualityScan</a>
-              <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#collapsibleNavbar'>
-                <span class='navbar-toggler-icon'></span>
-              </button>
+<head>
+  <title>Survey</title>
+  <meta name="google" content="notranslate" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/w3.css' %}" /> -->
 
-              <div class='collapse navbar-collapse justify-content-end' id='collapsibleNavbar'>
-                <ul class='nav navbar-nav'>
-                  <li class='nav-item no-arrow dropdown'>
-                    <a class='nav-link dropdown-toggle' href='#' id='pagesDropdown' data-toggle='dropdown'>
-                      <i class='fas fa-chalkboard'></i>
-                      Survey
-                    </a>
-                    <div class='dropdown-menu'>
-                      <a class='dropdown-item' href="{% url 'recipients' %}"><i class='fas fa-user-cog'></i> Add or Edit Recipients</a>
-                      <a class='dropdown-item' href="{% url 'questions' %}"><i class='far fa-edit'></i> Add or Edit Questions </a>
-                      <a class='dropdown-item' href="{% url 'answers' %}"><i class='far fa-edit'></i> Add or Edit Answers </a>
-                    </div>
-                  </li>
-                  <li class='nav-item'>
-                    <a class='nav-link' href="{% url 'analytics' %}">
-                      <i class='fas fa-chart-pie'></i>
-                      <span>Analytics</span></a>
-                  </li>
-                  <li class='nav-item no-arrow dropdown'>
-                    <a class='nav-link dropdown-toggle' href='#' id='pagesDropdown' data-toggle='dropdown'>
-                      <i class='fas fa-cog'></i>
-                      <span>Settings</span>
-                    </a>
-                    <div class='dropdown-menu'>
-                      <a class='dropdown-item' href='#'><i class='fas fa-user-plus'></i> Add New User</a>
-                      <a class='dropdown-item' href='#'><i class='fas fa-users'></i> View and Edit Users</a>
-                      <a class='dropdown-item' href='#'><i class='fas fa-key'></i> Change Password</a>
-                    </div>
-                  </li>
-                  <li class='nav-item'>
-                    <a class='nav-link' href='#'><i class='fas fa-user'></i> User Profile </a>
-                  </li>
-                  <li class='nav-item'>
-                    <a class='nav-link' href="{% url 'logout' %}"><i class='fas fa-sign-out-alt'></i> Log Out</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-        </nav>
-        {% block content %}
-        <!-- Content Goes here -->
-        {% endblock content %}
-        <!-- Footer -->
-        <footer class='footer text-white-50 footer-shadow bg-dark'>
-            <div class='container my-auto'>
-                <div class='text-left my-auto' style='font-family: Raleway'>
-                Copyright &copy; <span style='font-family: GoogleSans'>{% now 'Y' %}</span> | Created for SafeCare Ghana. All rights
-                reserved.
-                </div>
-            </div>
-        </footer>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-        <!-- Back to top -->
-        <a class='scroll-to-top rounded-circle shadow' href='#page-top'>
-          <i class='fas fa-angle-up'></i>
-        </a>
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/bootstrap.min.css' %}" /> -->
+  <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/jquery-editable-select.min.css' %}" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" type="text/css">
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/dataTables.bootstrap4.min.css' %}" /> -->
+  <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/css/all.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'survey/font/fonts.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'survey/css/app/survey.css' %}" />
+  <style>
+    .navbar-collapse {
+      font-size: 20px;
+    }
 
-        <!-- Bootstrap core JavaScript -->
-        <script src="{% static 'survey/js/vendor/jquery.min.js' %}"></script>
-        <script src="{% static 'survey/js/vendor/bootstrap.min.js' %}"></script>
+    .navbar-brand {
+      font-size: 1.8rem;
+    }
 
-        <!-- Core plugin JavaScript -->
-        <script src="{% static 'survey/js/vendor/jquery.easing.min.js' %}"></script>
+    .container.index {
+      margin-top: 115px;
+    }
 
-        <!-- Page level plugin JavaScript -->
-        <script src="{% static 'survey/js/vendor/Chart.min.js' %}"></script>
-        <script src="{% static 'survey/js/vendor/jquery.dataTables.min.js' %}"></script>
-        <script src="{% static 'survey/js/vendor/dataTables.bootstrap4.min.js' %}"></script>
+    .container.block {
+      margin-top: 115px;
+    }
+
+    .card.card-rounded {
+      border-radius: 15px;
+      box-shadow: none;
+      border: none;
+    }
+  </style>
+</head>
+
+<body id='page-top' class="bg-dark">
+  <nav class='navbar navbar-expand-lg bg-light fixed-top p-4 shadow-sm'>
+    <div class='container'>
+      <a class="navbar-brand d-flex w-50 me-auto text-muted" href="{% url 'index' %}">
+        MyBQualityScan</a>
+
+      <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNavbar">
+        <span class="navbar-toggler-icon text-dark"></span>
+      </button>
+
+      <div class='navbar-collapse collapse w-100' id='collapseNavbar'>
+        <ul class='navbar-nav w-100 justify-content-center'>
+          <li class='nav-item dropdown'>
+            <a class="nav-link dropdown-toggle" href="#" id="survey-dropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Survey
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="survey-dropdown">
+              <li>
+                <a class='dropdown-item' href="{% url 'recipients' %}">
+                  Recipients
+                </a>
+              </li>
+              <li>
+                <a class='dropdown-item' href="{% url 'questions' %}">
+                  Questions
+                </a>
+              </li>
+              <li>
+                <a class='dropdown-item' href="{% url 'answers' %}">
+                  Answers
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class='nav-item'>
+            <a class='nav-link' href="{% url 'analytics' %}">
+              <span>Analytics</span>
+            </a>
+          </li>
+          <li class='nav-item no-arrow dropdown'>
+            <a class='nav-link dropdown-toggle' href='#' id='settings-dropdown' role="button" data-bs-toggle='dropdown'
+              aria-expanded="false">
+              <span>Settings</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="settings-dropdown">
+              <li class='dropdown-item' href='#'>Users</li>
+              <li class='dropdown-item' href='#'>Change Password</li>
+            </ul>
+          </li>
+
+        </ul>
+        <ul class='nav navbar-nav ms-auto w-100 justify-content-end'>
+          <li class='nav-item dropdown'>
+            <a class='nav-link dropdown-toggle' href='#' id='user-dropdown' role="button" data-bs-toggle='dropdown'
+              aria-expanded="false">
+              <span>User</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="user-dropdown">
+              <li class='dropdown-item' href='#'>Profile</li>
+              <li class='dropdown-item' href='#'>Logout</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container block">
+    {% block content %}
+    <!-- Content Goes here -->
+    {% endblock content %}
+  </div>
+
+  <br />
+
+  <!-- Footer -->
+  <footer class='footer text-white-50 footer-shadow bg-dark'>
+    <div class='container my-auto'>
+      <div class='text-left my-auto' style='font-family: Raleway'>
+        Copyright &copy; <span style='font-family: GoogleSans'>{% now 'Y' %}</span> | Created for SafeCare Ghana. All
+        rights
+        reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <a class='scroll-to-top rounded-circle shadow' href='#page-top'>
+    <i class='fas fa-angle-up'></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript -->
+  <!-- <script src="{% static 'survey/js/vendor/jquery.min.js' %}"></script> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- <script src="{% static 'survey/js/vendor/bootstrap.min.js' %}"></script> -->
+
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+  <!-- Core plugin JavaScript -->
+  <script src="{% static 'survey/js/vendor/jquery.easing.min.js' %}"></script>
+
+  <!-- Page level plugin JavaScript -->
+  <script src="{% static 'survey/js/vendor/Chart.min.js' %}"></script>
+  <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+  <script src="{% static 'survey/js/vendor/dataTables.bootstrap4.min.js' %}"></script>
 
 
-        <!-- Demo scripts for this page -->
-        <script src="{% static 'survey/js/vendor/jquery-editable-select.min.js' %}"></script>
-        <script src="{% static 'survey/js/vendor/jqBootstrapValidation.js' %}"></script>
-        <script src="{% static 'survey/js/vendor/bootbox.min.js' %}" ></script>
-        <script src="{% static 'survey/js/vendor/notiflix-aio-2.1.2.min.js' %}"></script>
+  <!-- Demo scripts for this page -->
+  <script src="{% static 'survey/js/vendor/jquery-editable-select.min.js' %}"></script>
+  <script src="{% static 'survey/js/vendor/jqBootstrapValidation.js' %}"></script>
+  <script src="{% static 'survey/js/vendor/bootbox.min.js' %}"></script>
+  <script src="{% static 'survey/js/vendor/notiflix-aio-2.1.2.min.js' %}"></script>
 
-        <script src="{% static 'survey/js/app/survey.js' %}"></script>
-    </body>
+  <script src="{% static 'survey/js/app/survey.js' %}"></script>
+
+  <!-- {% block js_files %}
+  {% endblock js_files %} -->
+</body>
+
 </html>

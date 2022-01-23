@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from helpers.functions import is_ajax
 from recipient.models import Recipient
 from django.forms.models import model_to_dict
 # from .form import RecipientForm
@@ -14,7 +15,7 @@ def recipients(request):
 
 
 def show(request):
-    if request.is_ajax():
+    if is_ajax(request):
         data_id = request.GET.get('recID')
         data = model_to_dict(Recipient.objects.get(id=data_id))
     return HttpResponse(json.dumps(data), content_type='application/json')
@@ -26,7 +27,7 @@ def update(request):
     data = Recipient.objects.get(id=recipient_id)
     data.name = request.POST.get('name')
     data.email = request.POST.get('email')
-    data.contact = request.POST.get('contact')
+    data.contact_number = request.POST.get('contact')
     data.institution = request.POST.get('institution')
     data.save()
 

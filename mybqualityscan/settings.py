@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'question.apps.QuestionConfig',
     'answer.apps.AnswerConfig',
     'survey.apps.SurveyConfig',
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [
@@ -153,3 +154,7 @@ EMAIL_USE_TLS = True
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

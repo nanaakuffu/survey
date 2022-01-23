@@ -5,9 +5,12 @@ from django.db import models
 class Recipient(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    contact = models.CharField(max_length=15)
+    contact_number = models.CharField(max_length=15)
     institution = models.CharField(max_length=100)
     survey_link = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = 'recipients'
 
     def __str__(self):
         return self.name

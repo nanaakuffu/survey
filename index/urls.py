@@ -4,7 +4,5 @@ from django.urls import path
 urlpatterns = [
     path('', views.index, name='index'),
     path('home', views.home, name='home'),
-    # path('showdata', views.showData, name='show'),
-    # path('updatedata', views.updateData, name='update')
-    # path('', views.PostDetail.as_view(), name='post_detail'),
+    path('home/<file_name>', views.get_pdf_file, name='pdf_file'),
 ]

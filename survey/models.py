@@ -1,4 +1,5 @@
 from django.db import models
+from matplotlib.pyplot import cla
 from recipient.models import Recipient
 from question.models import Question
 from answer.models import Answer
@@ -14,6 +15,9 @@ class Survey(models.Model):
     date_responded = models.DateField()
     file_name = models.CharField(max_length=50)
 
+    class Meta:
+        db_table = 'survey'
+
     def __str__(self):
         return self.recipient
 
@@ -24,6 +28,9 @@ class Response(models.Model):
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     choice = models.CharField(max_length=1, default=0)
+
+    class Meta:
+        db_table = 'responses'
 
     def __str__(self):
         return self.survey

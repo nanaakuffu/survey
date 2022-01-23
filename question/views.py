@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
+from helpers.functions import is_ajax
 from .models import Question
 from django.forms.models import model_to_dict
 from .form import QuestionForm
@@ -13,7 +15,7 @@ def questions(request):
 
 
 def show(request):
-    if request.is_ajax():
+    if is_ajax(request):
         question_id = request.GET.get('questionID')
         data = model_to_dict(Question.objects.get(id=question_id))
     return HttpResponse(json.dumps(data), content_type='application/json')

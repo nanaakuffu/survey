@@ -23,7 +23,8 @@ class PDF:
         canvas.saveState()
         styles = getSampleStyleSheet()
 
-        custom_color = colors.Color(red=(46 / 255), green=(117 / 255), blue=(181 / 255))
+        custom_color = colors.Color(
+            red=(46 / 255), green=(117 / 255), blue=(181 / 255))
 
         style_right = ParagraphStyle(name='right',
                                      alignment=TA_RIGHT,
@@ -36,16 +37,21 @@ class PDF:
         image_path = STATICFILES_DIRS[0] + "/survey/img/new_survey_logo.jpg"
         image_header = Image(image_path, 4.1 * inch, 1.2 * inch)
         image_header.hAlign = 'LEFT'
-        header_text = Paragraph('<font size="20"><b>MyBQualityScan</b></font>', style_right)
-        subheader_text = Paragraph('<font size="15"><b>QI Recommendation</b></font>', style_right)
+        header_text = Paragraph(
+            '<font size="20"><b>MyBQualityScan</b></font>', style_right)
+        subheader_text = Paragraph(
+            '<font size="15"><b>QI Recommendation</b></font>', style_right)
 
         # This is needed for the drawOn for Paragraph to work
         w, h = header_text.wrap(doc.width, doc.topMargin)
         w1, h1 = subheader_text.wrap(doc.width, doc.topMargin)
         # Draw image and Text on the pdf canvas
-        image_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 30)
-        header_text.drawOn(canvas, doc.leftMargin - 10, doc.height + doc.topMargin + 30)
-        subheader_text.drawOn(canvas, doc.leftMargin - 10, doc.height + doc.topMargin)
+        image_header.drawOn(canvas, doc.leftMargin,
+                            doc.height + doc.topMargin - 30)
+        header_text.drawOn(canvas, doc.leftMargin - 10,
+                           doc.height + doc.topMargin + 30)
+        subheader_text.drawOn(canvas, doc.leftMargin - 10,
+                              doc.height + doc.topMargin)
 
         # Footer
         page_number_text = "%d" % (doc.page)
@@ -55,7 +61,7 @@ class PDF:
 
         canvas.restoreState()
 
-    def makePDF(self, header_data, data):
+    def make_pdf(self, header_data, data):
         try:
             buffer = self.buffer
             pdf_document = SimpleDocTemplate(buffer,
@@ -85,16 +91,20 @@ class PDF:
 
             for key, value in data.items():
                 pdf_elements.append(Spacer(0, 5))
-                pdf_elements.append(Paragraph('<b>' + str(key) + '. Question:</b>', styles['Normal']))
+                pdf_elements.append(
+                    Paragraph('<b>' + str(key) + '. Question:</b>', styles['Normal']))
                 pdf_elements.append(Paragraph(value[0], styles['Normal']))
                 pdf_elements.append(Spacer(0, 5))
-                pdf_elements.append(Paragraph('<b>Your Answer:</b>', styles['Normal']))
+                pdf_elements.append(
+                    Paragraph('<b>Your Answer:</b>', styles['Normal']))
                 pdf_elements.append(Paragraph(value[1], styles['Normal']))
                 pdf_elements.append(Spacer(0, 5))
-                pdf_elements.append(Paragraph('<b>Recommendation:</b>', styles['Normal']))
+                pdf_elements.append(
+                    Paragraph('<b>Recommendation:</b>', styles['Normal']))
                 pdf_elements.append(Paragraph(value[2], styles['Normal']))
                 pdf_elements.append(Spacer(0, 5))
-                pdf_elements.append(HRFlowable(width="100%", color=colors.black))
+                pdf_elements.append(HRFlowable(
+                    width="100%", color=colors.black))
 
             pdf_document.build(pdf_elements,
                                onFirstPage=self._header_footer,

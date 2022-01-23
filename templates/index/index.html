@@ -1,77 +1,84 @@
-{% extends "index/base.html" %} 
+{% extends "index/base.html" %}
+{% load static %}
 {% block content %}
-<div class='container pad-top'>
-    <!-- Icon Cards-->
-    <div class="row">
-      <div class="col-xl-6 col-sm-6 mb-3">
-        <div class="card text-white bg-primary o-hidden h-100">
-          <div class="card-body">
-            <div class="card-body-icon">
-              <i class="fas fa-envelope"></i>
-            </div>
-            <div class="mr-5" id="eMails"></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-6 col-sm-6 mb-3">
-        <div class="card text-white bg-success o-hidden h-100">
-          <div class="card-body">
-            <div class="card-body-icon">
-              <i class="fas fa-envelope-open"></i>
-            </div>
-            <div class="mr-5" id="eMailRes"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- DataTables Example -->
-    <div class="card mb-3">
-      <div class="card-header">
-        <i class="fas fa-table"></i>
-        <span class="header" style="font-size:24px">
-          eMail Response Tracking
-        </span>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table refresh" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-              <tr>
-                <th>Recipeint Name </th>
-                <th>Recipient Facility</th>
-                <th>Date Sent</th>
-                <th>Has Responded </th>
-                <th>Date Responded</th>
-                <th>Survey Link </th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <th>Recipeint Name </th>
-                <th>Recipient Facility</th>
-                <th>Date Sent</th>
-                <th>Has Responded </th>
-                <th>Date Responded</th>
-                <th>Survey Link </th>
-              </tr>
-            </tfoot>
-            <tbody>
-              {% for result in results %}
-                <tr>
-                  <td>{{ result.recipient.name }} </td>
-                  <td>{{ result.recipient.institution }} </td>
-                  <td>{{ result.date_sent }}</td>
-                  <td>{{ result.hasresponded|yesno:"Yes,No" }} </td>
-                  <td>{{ result.date_responded|default:"Not yet" }}</td>
-                  <td>{{ result.recipient.survey_link }} </td>
-                </tr>
-              {% endfor%}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <br />
+<!-- <div class="container block"> -->
+<!-- Icon Cards-->
+<div class="row">
+
+  <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-center">
+    <span class="text-light" style="font-size: 20px;">Hi,</span>
+    <h1 class="text-white">Nana Baah</h1>
   </div>
+  <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-center">
+    <span class="text-light" style="font-size: 20px;">Emails Sent</span>
+    <h1 class="text-white" id="eMails">Loading ...</h1>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-center">
+    <span class="text-light" style="font-size: 20px;">Response In</span>
+    <h1 class="text-white" id="eMailRes">Loading ...</h1>
+  </div>
+</div>
+
+<!-- DataTables Example -->
+<div class="card mb-3 card-rounded">
+  <!-- <div class="card-header">
+    <i class="fas fa-table"></i>
+    <span class="header" style="font-size:24px">
+      eMail Response Tracking
+    </span>
+  </div> -->
+  <div class="card-body">
+    <div>
+      <h4 class="card-title card-title-dash">Email Response Tracking</h4>
+    </div>
+    <hr />
+    <div class="table-responsive">
+      <table class="table refresh" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Recipeint Name </th>
+            <th>Recipient Facility</th>
+            <th>Date Sent</th>
+            <th>Has Responded </th>
+            <th>Date Responded</th>
+            <th>Survey Link </th>
+            <th>Action </th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>Recipeint Name </th>
+            <th>Recipient Facility</th>
+            <th>Date Sent</th>
+            <th>Has Responded </th>
+            <th>Date Responded</th>
+            <th>Survey Link </th>
+            <th>Action </th>
+          </tr>
+        </tfoot>
+        <tbody>
+          {% for result in results %}
+          <tr>
+            <td>{{ result.recipient.name }} </td>
+            <td>{{ result.recipient.institution }} </td>
+            <td>{{ result.date_sent }}</td>
+            <td>{{ result.hasresponded|yesno:"Yes,No" }} </td>
+            <td>{{ result.date_responded|default:"Not yet" }}</td>
+            <td>{{ result.recipient.survey_link }} </td>
+            <td> {% if result.file_name %} <a href="{% url 'pdf_file' result.file_name %}" class="btn btn-danger"> <i
+                  class="fas fa-download"></i></a> {% endif %} </td>
+          </tr>
+          {% endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
+<br />
+{% block js_files %}
+{{ block.super }}
+<script src="{% static 'survey/js/app/index.js' %}"></script>
+{% endblock %}
 {%endblock%}

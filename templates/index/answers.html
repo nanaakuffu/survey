@@ -1,50 +1,61 @@
-{% extends "index/base.html" %} 
+{% extends "index/base.html" %}
 {% block content %}
-<div class="container pad-top">
-    <!-- DataTables Example -->
-    <div class="card mb-3">
-      <div class="card-header">
-        <span class="align-middle" style="font-size:24px">
-          Survey Answers
-        </span>
-        <a href='#' class='btn btn-primary rounded-circle shadow float-right' data-toggle='modal' data-target='#AddModal' title='Add Answer Data'><i class='fas fa-plus'></i> </a>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table" id="dataTable">
-            <thead>
-              <tr>
-                <th>Question ID</th>
-                <th>Survey Answer</th>
-                <th>Needs Recommendation</th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <th>Question ID</th>
-                <th>Survey Answer</th>
-                <th>Needs Recommendation</th>
-              </tr>
-            </tfoot>
-            <tbody>
-              {% for answer in answers %}
-                <tr>
-                  <td><a href='#' data-toggle='modal' data-target='#aEditModal' data-id='{{ answer.id }}'>{{ answer.question.id }}</a></td>
-                  <td><a href='#' data-toggle='modal' data-target='#aEditModal' data-id='{{ answer.id }}'>{{ answer.answer }}</a></td>
-                  <td><a href='#' data-toggle='modal' data-target='#aEditModal' data-id='{{ answer.id }}'> {% if answer.needs_recommendation == 1 %} Yes {% else %} No {% endif %}</a></td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
 
+<!-- DataTables Example -->
+<div class="card card-rounded">
+
+  <div class="card-body">
+    <div class="d-sm-flex justify-content-between align-items-start">
+      <div>
+        <h4 class="card-title card-title-dash mt-1">Answers</h4>
       </div>
+
+      <a href='#' class='btn btn-primary shadow float-right' data-bs-toggle="modal" data-bs-target='#AddModal'
+        title='Add answer data'><i class='fas fa-plus'></i> Add Answer
+      </a>
+    </div>
+    <hr />
+    <div class="table-responsive">
+      <table class="table table-hover" id="dataTable">
+        <thead>
+          <tr>
+            <th>Question Id</th>
+            <th>Survey Answer</th>
+            <th>Needs Recommendation</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>Question Id</th>
+            <th>Survey Answer</th>
+            <th>Needs Recommendation</th>
+            <th>Action</th>
+          </tr>
+        </tfoot>
+        <tbody>
+          {% for answer in answers %}
+          <tr>
+            <td>{{ answer.question.id }}</td>
+            <td>{{ answer.answer }}</td>
+            <td>{% if answer.needs_recommendation == 1 %} Yes {% else %} No {% endif %}</td>
+            <td>
+              <a class="btn btn-primary" href='#' data-bs-toggle='modal' data-bs-target='#aEditModal'
+                data-id='{{ answer.id }}'>
+                <i class="fas fa-pencil-alt"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
 
   </div>
+</div>
 
-  <!-- Beginning of Add Modal -->
-  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
+<!-- Beginning of Add Modal -->
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -58,26 +69,29 @@
             <input name='adding' type='hidden' value='answers'>
             <div class="form-row">
               <div class='form-group col-md-4'>
-                <select class='form-control' name='question' id='question' placeholder='Question ID' autofocus required />
-                  {% for question in questions %}
-                    <option value="{{ question.id }}"> {{ question.id }} </option>
-                  {% endfor %}
+                <select class='form-control' name='question' id='question' placeholder='Question ID' autofocus
+                  required />
+                {% for question in questions %}
+                <option value="{{ question.id }}"> {{ question.id }} </option>
+                {% endfor %}
                 </select>
               </div>
               <div class="col-md-5"></div>
               <div class='form-group col-md-3'>
                 <select class='form-control' name='choice' id='choice' placeholder='Choice' required>",
                   {% for choice in choices %}
-                    <option value="{{ choice }}">{{ choice }}</option>
+                  <option value="{{ choice }}">{{ choice }}</option>
                   {% endfor %}
                 </select>
               </div>
             </div>
             <div class='form-group'>
-              <textarea type='text' class='form-control'  name='answer' id='answer' rows='5' placeholder='Answer Text' required></textarea>
+              <textarea type='text' class='form-control' name='answer' id='answer' rows='5' placeholder='Answer Text'
+                required></textarea>
             </div>
             <div class='custom-control custom-switch col-md-6'>
-              <input type='checkbox' class='custom-control-input' id='needs_recommendation' name='needs_recommendation' value="1">
+              <input type='checkbox' class='custom-control-input' id='needs_recommendation' name='needs_recommendation'
+                value="1">
               <label class='custom-control-label' for='needs_recommendation'>Needs Recommendation</label>
             </div>
           </form>
@@ -85,63 +99,67 @@
       </div>
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" form='addForm' id="addingData" value="addData"> Save Data </button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"> Cancel </button>
+        <button type="submit" class="btn btn-primary" form='addForm' id="addingData" value="addData"> Save Data
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"> Cancel </button>
       </div>
 
     </div>
   </div>
-  </div>
-  <!-- End of Add Modal -->
+</div>
+<!-- End of Add Modal -->
 
-  <!-- Beginning of Edit Modal -->
-  <div class="modal hide fade" id="aEditModal" tabindex="-1" data-focus-on="input:first" aria-hidden='true'>
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title" id="EditModalLabel"> Edit answer Data </h3>
-        </div>
-
-        <div class="modal-body">
-          <div class="box-body pad">
-            <form id="editForm" action="{% url 'updateanswer' %}" method='POST' enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="form-row">
-                <div class='form-group col-md-4'>
-                  <select class='form-control' name='question' id='e_question' placeholder='Question ID' autofocus required />
-                    {% for question in questions %}
-                      <option value="{{ question.id }}"> {{ question.id }} </option>
-                    {% endfor %}
-                  </select>
-                </div>
-                <div class="col-md-5"></div>
-                <div class='form-group col-md-3'>
-                  <select class='form-control' name='choice' id='e_choice' placeholder='Choice' required>",
-                    {% for choice in choices %}
-                      <option value="{{ choice }}">{{ choice }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-              <div class='form-group'>
-                <textarea type='text' class='form-control'  name='answer' id='e_answer' rows='5' placeholder='Answer Text' required></textarea>
-              </div>
-              <div class='custom-control custom-switch'>
-                <input type='checkbox' class='custom-control-input' id='e_needs_recommendation' name='needs_recommendation' value="1">
-                <label class='custom-control-label' for='e_needs_recommendation'>Needs Recommendation</label>
-              </div>
-              <input name='id' id="id" type='hidden' value=''>
-            </form>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn btn-primary" type="submit" form="editForm" name="flag" value="update"> Update </button>
-          <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"> Cancel </button>
-        </div>
-
+<!-- Beginning of Edit Modal -->
+<div class="modal hide fade" id="aEditModal" tabindex="-1" data-focus-on="input:first" aria-hidden='true'>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="EditModalLabel"> Edit answer Data </h3>
       </div>
+
+      <div class="modal-body">
+        <div class="box-body pad">
+          <form id="editForm" action="{% url 'updateanswer' %}" method='POST' enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class='form-group col-md-4'>
+                <select class='form-control' name='question' id='e_question' placeholder='Question ID' autofocus
+                  required />
+                {% for question in questions %}
+                <option value="{{ question.id }}"> {{ question.id }} </option>
+                {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-5"></div>
+              <div class='form-group col-md-3'>
+                <select class='form-control' name='choice' id='e_choice' placeholder='Choice' required>",
+                  {% for choice in choices %}
+                  <option value="{{ choice }}">{{ choice }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class='form-group'>
+              <textarea type='text' class='form-control' name='answer' id='e_answer' rows='5' placeholder='Answer Text'
+                required></textarea>
+            </div>
+            <div class='custom-control custom-switch'>
+              <input type='checkbox' class='custom-control-input' id='e_needs_recommendation'
+                name='needs_recommendation' value="1">
+              <label class='custom-control-label' for='e_needs_recommendation'>Needs Recommendation</label>
+            </div>
+            <input name='id' id="id" type='hidden' value=''>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" form="editForm" name="flag" value="update"> Update </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"> Cancel </button>
+      </div>
+
     </div>
   </div>
-  <!-- End of Edit Modal -->
-{%endblock%}
+</div>
+<!-- End of Edit Modal -->
+{% endblock %}

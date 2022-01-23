@@ -1,85 +1,93 @@
-{% extends "index/survey_base.html" %} 
+{% extends "index/survey_base.html" %}
 {% block content %}
 {% if recipientExists > 0 and hasResponded == 0 %}
-    <div class="parallax">
-        <div class="overlay">
-            <div class="jumbotron center" style="background-color: transparent !important">
-            <h1 style="font-family: Raleway; font-size: 65px"> MyBQualityScan </h1>
-            <h3 style="font-family: Raleway; font-size: 30px; font-weight: 300;"> Quality Imporvement Survey </h3>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <br />
-        <p>At PharmAccess we believe in doing healthcare better. With a focus on sub-Saharan Africa, we work on improving the
-            whole system by mobilizing private and public resources to get more money into the system, measuring and improving
-            quality (through the SafeCare Standards) and reaching even the most excluded through simple technologies like the
-            mobile phone. Our approach to healthcare is designed to ensure that everyone has access to better care when they need
-            it, not just when they can afford it.</p>
-
-        <p>MyBQualityScan has been developed out of the SafeCare Standards (the first and so far, the only ISQua accredited
-            clinical standards, tailor-made for resource restricted settings) as a self-diagnostic tool for providers to evaluate
-            their healthcare facilities on basic quality requirements. Full compliance to these set of criteria may serve as a
-            positive starting point to enrolling in the SafeCare Rating program.</p>
-
-        <p>You are kindly required to respond to these questions by choosing the option which reflects the situation in your
-            healthcare facility. For each criteria which your response indicates a gap in compliance, a corresponding quality
-            improvement recommendation will be compiled and be available as a Downloadable PDF which will also be sent to you
-            in your mail. We highly encourage you to implement those recommendations to help improve quality of care in your facility.
-            We assure you of utmost confidentiality of data obtained. Thank you for undertaking this assessment.</p>
-
-        <p>For any enquiries please call or mail on <span style="font-family: GoogleSans;">0208158544</span>; qualityghana@pharmaccess.org. If after successfully submitting
-        the survey you do not see the mail in your inbox, kindly check your spam folder.</p>
-        <hr />
-        <form class="w3-form" id="surveyResponseForm" method='POST' enctype="multipart/form-data" >
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-10">
-                    <input type="hidden" name="survey_date" value="{{ survey_date|date:'F j, Y' }}"/>
-                    <input type="hidden" name="survey_id" value="{{ survey }}"/>
-                    <input type="hidden" name="recipient_id" value="{{ recipient }}"/>
-                    <input type="hidden" name="email" value="{{ email }}"/>
-                    <ol class="steps">
-                        {% for questions in survey_form %}
-                            <li>
-                                <p>{{ questions.question_text }} </p>
-                                <div class="control-group">
-                                    <div class="controls" required>
-                                        {% for answer in questions.answers|dictsort:"choice" %}
-                                            {% if answer.choice == 'A' %}
-                                                <label class='holder'><b>{{ answer.choice }}. </b> {{ answer.answer }}
-                                                    <input type='radio' name='{{questions.id}}' value='{{ answer.id}}'
-                                                    data-validation-minchecked-minchecked='1'
-                                                    data-validation-minchecked-message='You must choose one response'>
-                                                    <div class="checkmark"></div>
-                                                </label>
-                                            {% else %}
-                                                <label class='holder'><b>{{ answer.choice }}. </b> {{ answer.answer }}
-                                                    <input type='radio' name='{{questions.id}}' value='{{ answer.id}}'>
-                                                    <div class="checkmark"></div>
-                                                </label>
-                                            {% endif %}
-                                        {% endfor %}    
-                                        <p class='help-block'></p>
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                </div>
-            </div>
-            <input class="btn button-shadow" type="submit" name="sendResponse" value="Submit Survey" />
-        </form>
-    </div>
-{% else %}
-    <div class="parallax">
+<div class="parallax">
     <div class="overlay">
         <div class="jumbotron center" style="background-color: transparent !important">
-        <h1 style="font-family: Raleway; font-size: 65px"> MyBQualityScan </h1>
-        <h4 class="text-warning" style="font-family: Raleway; font-size: 20px; font-weight: 300;"> You have already provided your responses for this survey.</h4>
+            <h1 style="font-family: Raleway; font-size: 65px"> MyBQualityScan </h1>
+            <h3 style="font-family: Raleway; font-size: 30px; font-weight: 300;"> Quality Imporvement Survey </h3>
         </div>
     </div>
+</div>
+<div class="container">
+    <br />
+    <p>At PharmAccess we believe in doing healthcare better. With a focus on sub-Saharan Africa, we work on improving
+        the whole system by mobilizing private and public resources to get more money into the system, measuring and
+        improving quality (through the SafeCare Standards) and reaching even the most excluded through simple
+        technologies like the mobile phone. Our approach to healthcare is designed to ensure that everyone has access to
+        better care when they need it, not just when they can afford it.
+    </p>
+
+    <p>MyBQualityScan has been developed out of the SafeCare Standards (the first and so far, the only ISQua accredited
+        clinical standards, tailor-made for resource restricted settings) as a self-diagnostic tool for providers to
+        evaluate their healthcare facilities on basic quality requirements. Full compliance to these set of criteria may
+        serve as a positive starting point to enrolling in the SafeCare Rating program.
+    </p>
+
+    <p>You are kindly required to respond to these questions by choosing the option which reflects the situation in your
+        healthcare facility. For each criteria which your response indicates a gap in compliance, a corresponding
+        quality improvement recommendation will be compiled and be available as a Downloadable PDF which will also be
+        sent to you in your mail. We highly encourage you to implement those recommendations to help improve quality of
+        care in your facility. We assure you of utmost confidentiality of data obtained. Thank you for undertaking this
+        assessment.
+    </p>
+
+    <p>For any enquiries please call or mail on <span style="font-family: GoogleSans;">0208158544</span>;
+        qualityghana@pharmaccess.org. If after successfully submitting the survey you do not see the mail in your inbox,
+        kindly check your spam folder.
+    </p>
+    <hr />
+    <form class="w3-form" id="surveyResponseForm" method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-10">
+                <input type="hidden" name="survey_date" value="{{ survey_date|date:'F j, Y' }}" />
+                <input type="hidden" name="survey_id" value="{{ survey }}" />
+                <input type="hidden" name="recipient_id" value="{{ recipient }}" />
+                <input type="hidden" name="email" value="{{ email }}" />
+                <ol class="steps">
+                    {% for questions in survey_form %}
+                    <li>
+                        <p>{{ questions.question_text }} </p>
+                        <div class="control-group">
+                            <div class="controls" required>
+                                {% for answer in questions.answers|dictsort:"choice" %}
+                                {% if answer.choice == 'A' %}
+                                <label class='holder'><b>{{ answer.choice }}. </b> {{ answer.answer }}
+                                    <input type='radio' name='{{ questions.id }}' value='{{ answer.id}}'
+                                        data-validation-minchecked-minchecked='1'
+                                        data-validation-minchecked-message='You must choose one response'>
+                                    <div class="checkmark"></div>
+                                </label>
+                                {% else %}
+                                <label class='holder'><b>{{ answer.choice }}. </b> {{ answer.answer }}
+                                    <input type='radio' name='{{ questions.id }}' value='{{ answer.id}}'>
+                                    <div class="checkmark"></div>
+                                </label>
+                                {% endif %}
+                                {% endfor %}
+                                <p class='help-block'></p>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+        <input class="btn button-shadow" type="submit" name="sendResponse" value="Submit Survey" />
+    </form>
+</div>
+{% else %}
+<div class="parallax">
+    <div class="overlay">
+        <div class="jumbotron center" style="background-color: transparent !important">
+            <h1 style="font-family: Raleway; font-size: 65px"> MyBQualityScan </h1>
+            <h4 class="text-warning" style="font-family: Raleway; font-size: 20px; font-weight: 300;">
+                You have already provided your responses for this survey.
+            </h4>
+        </div>
     </div>
+</div>
 {% endif %}
 <br />
 {% endblock %}
