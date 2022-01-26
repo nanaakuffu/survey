@@ -1,17 +1,25 @@
-{% extends "index/base.html" %} 
+{% extends "index/base.html" %}
 {% block content %}
-<div class="container pad-top">
-    <div class="card-header">
-      <span style="font-size:24px"> Survey Analytics </span>
+<div class="card card-rounded">
+  <div class="card-body">
+    <div class="d-sm-flex justify-content-between align-items-start">
+      <div>
+        <h4 class="card-title card-title-dash mt-1">Analytics</h4>
+      </div>
     </div>
-    <ol class="ansteps">
-        {% for item in analytics %}
-          <li><p style="font-weight:400;"> {{ item.question_text }} </p></li>
-          <div class='chart-container'>
-            <canvas class="chart"></canvas>
-          </div>
-        {% endfor %}
+    <hr />
+    <ol class="text-muted" style="font-size: 24px;">
+      {% for item in analytics %}
+      <li>
+        <p style="font-weight:400; font-size: 24px;"> {{ item.question_text }} </p>
+      </li>
+      <div class='chart-container w-100 h-50'>
+        <canvas class="chart" style="height: auto;"></canvas>
+      </div>
+      {% endfor %}
     </ol>
-    <br />
+  </div>
+
+  <br />
 </div>
 {%endblock%}

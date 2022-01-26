@@ -1,0 +1,102 @@
+{% extends "index/base.html" %}
+{% block content %}
+
+<div class="card card-rounded">
+    <div class="card-body">
+        <div class="d-sm-flex justify-content-between align-items-start">
+            <div>
+                <h4 class="card-title card-title-dash mt-1">Users</h4>
+            </div>
+
+            <a href='#' class='btn btn-primary shadow float-right' data-bs-toggle="modal" data-bs-target='#adduser'
+                title='Add answer data'><i class='fas fa-plus'></i> Add New User
+            </a>
+        </div>
+        <hr />
+        <div class='table-responsive'>
+            <table id='dataTable' class='table table-hover'>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email Address</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email Address</th>
+                        <th>Status</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{% if user.is_active %} <span class="badge rounded-pill bg-success">Active</span> {% else %}
+                            <span class="badge rounded-pill bg-danger">Inactive</span> {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="adduser">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add New User</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form id="create_user" method="post" action="{% url 'user' %}">
+                    {% csrf_token %}
+                    <div class="mb-3 mt-3">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" placeholder="First Name"
+                            name="first_name">
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name">
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter password"
+                            name="password">
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="password_confirmation" class="form-label">Confirm Password:</label>
+                        <input type="password" class="form-control" id="password_confirmation"
+                            placeholder="Enter password confirmation" name="password_confirmation">
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="create_user" class="btn btn-primary">Submit</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

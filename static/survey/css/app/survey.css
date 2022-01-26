@@ -52,8 +52,8 @@ td {
 }
 
 .chart-container {
-  width: 60%;
-  height: auto;
+  width: 1000px;
+  height: 800px;
 }
 
 table {

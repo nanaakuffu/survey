@@ -7,7 +7,7 @@ class Recipient(models.Model):
     email = models.EmailField()
     contact_number = models.CharField(max_length=15)
     institution = models.CharField(max_length=100)
-    survey_link = models.CharField(max_length=200)
+    survey_link = models.CharField(max_length=200, null=True)
 
     class Meta:
         db_table = 'recipients'

@@ -1,45 +1,53 @@
+from django.db import DatabaseError
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from helpers.functions import is_ajax
+from helpers.functions import is_ajax, response_data
 from recipient.models import Recipient
 from django.forms.models import model_to_dict
-# from .form import RecipientForm
-import json
 
 
 # Create your views here.
-def recipients(request):
-    recipient_data = Recipient.objects.all()
-    # form = RecipientForm()
-    return render(request, 'index/recipients.html', {'recipients': recipient_data})
+def recipients(request) -> HttpResponse:
+    if request.method == "GET":
+        recipient_data = Recipient.objects.all()
+        return render(request, 'index/recipients.html', {'recipients': recipient_data})
+    else:
+        try:
+            data = Recipient()
+            data.name = request.POST.get('name')
+            data.email = request.POST.get('email')
+            data.contact_number = request.POST.get('contact_number')
+            data.institution = request.POST.get('institution')
+
+            data.save()
+            message = "Request completed successfully."
+            status = 200
+        except DatabaseError:
+            message = "Sorry! An error occured."
+            status = 500
+
+        return response_data(message=message, status=status)
 
 
-def show(request):
-    if is_ajax(request):
-        data_id = request.GET.get('recID')
-        data = model_to_dict(Recipient.objects.get(id=data_id))
-    return HttpResponse(json.dumps(data), content_type='application/json')
+def show(request, id) -> HttpResponse:
+    data = model_to_dict(Recipient.objects.get(id=id))
+
+    return response_data(data=data, message="Request completed successfully.")
 
 
-def update(request):
-    recipient_id = request.POST.get('key')
+def update(request, id) -> HttpResponse:
+    try:
+        data = Recipient.objects.get(id=id)
+        data.name = request.POST.get('name')
+        data.email = request.POST.get('email')
+        data.contact_number = request.POST.get('contact_number')
+        data.institution = request.POST.get('institution')
 
-    data = Recipient.objects.get(id=recipient_id)
-    data.name = request.POST.get('name')
-    data.email = request.POST.get('email')
-    data.contact_number = request.POST.get('contact')
-    data.institution = request.POST.get('institution')
-    data.save()
+        data.save()
+        message = "Request completed successfully."
+        status = 200
+    except DatabaseError:
+        message = "Sorry! An error occured."
+        status = 500
 
-    return redirect('recipients')
-
-
-def save(request):
-    data = Recipient()
-    data.name = request.POST['name']
-    data.email = request.POST['email']
-    data.contact = request.POST['contact']
-    data.institution = request.POST['institution']
-    data.save()
-
-    return redirect('recipients')
+    return response_data(message=message, status=status)

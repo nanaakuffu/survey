@@ -2,26 +2,28 @@
 {% load static %}
 {% block content %}
 
-<!-- <div class="container block"> -->
-<!-- Icon Cards-->
 <div class="row">
 
   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-center">
-    <span class="text-light" style="font-size: 20px;">Hi,</span>
-    <h1 class="text-white">Nana Baah</h1>
+    <span class="text-dark" style="font-size: 20px;">Welcome,</span>
+    <h1>{{ user.first_name }}</h1>
   </div>
   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-center">
-    <span class="text-light" style="font-size: 20px;">Emails Sent</span>
-    <h1 class="text-white" id="eMails">Loading ...</h1>
+    <span class="text-dark" style="font-size: 20px;">Emails Sent</span>
+    <h1 id="eMails">
+      <span class="spinner-border"></span>
+    </h1>
   </div>
   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-center">
-    <span class="text-light" style="font-size: 20px;">Response In</span>
-    <h1 class="text-white" id="eMailRes">Loading ...</h1>
+    <span class="text-dark" style="font-size: 20px;">Response In</span>
+    <h1 id="eMailRes">
+      <span class="spinner-border"></span>
+    </h1>
   </div>
 </div>
 
 <!-- DataTables Example -->
-<div class="card mb-3 card-rounded">
+<div class="card mb-3 card-rounded shadow-sm">
   <!-- <div class="card-header">
     <i class="fas fa-table"></i>
     <span class="header" style="font-size:24px">
@@ -34,16 +36,16 @@
     </div>
     <hr />
     <div class="table-responsive">
-      <table class="table refresh" id="dataTable" width="100%" cellspacing="0">
+      <table class="table table-hover refresh" id="dataTable">
         <thead>
           <tr>
             <th>Recipeint Name </th>
             <th>Recipient Facility</th>
             <th>Date Sent</th>
-            <th>Has Responded </th>
+            <th>Has Responded</th>
             <th>Date Responded</th>
-            <th>Survey Link </th>
-            <th>Action </th>
+            <th>Survey Link</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tfoot>
@@ -75,8 +77,7 @@
     </div>
   </div>
 </div>
-<!-- </div> -->
-<br />
+
 {% block js_files %}
 {{ block.super }}
 <script src="{% static 'survey/js/app/index.js' %}"></script>

@@ -1,10 +1,11 @@
 # Django related modules
+from email import message
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
 from django.template import RequestContext
 
-from helpers.functions import hash_string, is_ajax
+from helpers.functions import hash_string, is_ajax, response_data
 from .models import Answer, Question, Survey, Response, Recipient
 from survey.models import QuestionsAndAnswers, Analytics
 from django.conf import settings
@@ -21,55 +22,59 @@ import json
 
 # Create your views here.
 def send_survey(request):
-    if is_ajax(request):
-        recipient_id = request.POST.get('sendID')
-        recipient_email = [request.POST.get('sendeMail')]
-        survey_id = str(randint(1000000, 9999999))
-        sender = settings.EMAIL_HOST_USER
-        link_prefix = request.scheme+"://"+request.get_host
-        survey_link = link_prefix+"/survey/survey?id=" + recipient_id + "&sid=" + survey_id + "&mid=" + \
-            recipient_email[0]
 
-        email_message = "<p> Dear Sir/Madam, </p> \
-                         <p> PharmAccess Ghana welcomes you to its self-administered basic quality assessment tool. </p> \
-                         <p> We invite you to take this quick (15 minutes) survey about your health facility to objectively evaluate some basic quality issues by clicking on the link below </p> \
-                         <p>" + survey_link + "</p>"
-        subject = "MyBQualityScan Survey"
+    recipient = Recipient.objects.get(id=request.POST.get('id'))
 
-        message_email = EmailMessage(
-            subject=subject,
-            body=email_message,
-            from_email=sender,
-            to=recipient_email
-        )
-        message_email.content_subtype = 'html'
+    recipient_id = recipient.id
+    recipient_email = [recipient.email]
+    survey_id = str(randint(1000000, 9999999))
+    sender = settings.EMAIL_HOST_USER
+    link_prefix = request.scheme+"://"+request.get_host
+    survey_link = link_prefix+"/survey/survey?id=" + recipient_id + "&sid=" + survey_id + "&mid=" + \
+        recipient_email[0]
 
-        # Check if the recipient has already been served a survey
-        if Survey.objects.filter(recipient=recipient_id).count() == 0:
-            # If no try sending the survey but if not report double
-            if message_email.send():
-                # Save the link in the recipient table
-                recipient_obj = Recipient.objects.get(id=recipient_id)
-                recipient_obj.survey_link = survey_link
-                recipient_obj.save()
+    email_message = "<p> Dear Sir/Madam, </p> \
+                        <p> PharmAccess Ghana welcomes you to its self-administered basic quality assessment tool. </p> \
+                        <p> We invite you to take this quick (15 minutes) survey about your health facility to objectively evaluate some basic quality issues by clicking on the link below </p> \
+                        <p>" + survey_link + "</p>"
+    subject = "MyBQualityScan Survey"
 
-                # Save the details in the survey table
-                survey = Survey()
-                survey.recipient = recipient_obj
-                survey.date_sent = date.today()
-                survey.hasresponded = 0
-                survey.survey_id = int(survey_id)
-                survey.save()
+    message_email = EmailMessage(
+        subject=subject,
+        body=email_message,
+        from_email=sender,
+        to=recipient_email
+    )
+    message_email.content_subtype = 'html'
 
-                # Send the response to the  ajax and then to template
-                data = {'status': 'success'}
-            else:
-                # Sending was unsuccessful. Report on that
-                data = {'status': 'failure'}
+    # Check if the recipient has already been served a survey
+    if Survey.objects.filter(recipient=recipient_id).count() == 0:
+        # If no try sending the survey but if not report double
+        if message_email.send():
+            # Save the link in the recipient table
+            recipient.survey_link = survey_link
+            recipient.save()
+
+            # Save the details in the survey table
+            survey = Survey()
+            survey.recipient = recipient
+            survey.date_sent = date.today()
+            survey.hasresponded = 0
+            survey.survey_id = int(survey_id)
+            survey.save()
+
+            # Send the response to the  ajax and then to template
+            status = 200
+            message = "Request completed successfully."
         else:
-            data = {'status': 'double'}
+            # Sending was unsuccessful. Report on that
+            status = 500
+            message = "Request completed successfully."
+    else:
+        status = 204
+        message = "Request completed successfully."
 
-    return HttpResponse(json.dumps(data), content_type='application/json')
+    return response_data(status=status, message=message)
 
 
 def get_questions(request):
@@ -181,11 +186,13 @@ def process_survey(request):
         survey.file_name = file_name.split('/')[-1]
         survey.save()
 
-        data = {'status': 200}
+        status = 200
+        message = "Request completed successfully"
     else:
-        data = {'status': 400, "message": "Mail Sending Error"}
+        status = 400
+        message = "Mail Sending Error"
 
-    return HttpResponse(json.dumps(data), content_type='application/json')
+    return response_data(status=status, message=message)
 
 
 def sent_page(request):
@@ -194,9 +201,14 @@ def sent_page(request):
 
 def get_analytics(request):
     query = Analytics.objects.all()
-    if is_ajax(request):
-        analytics_data = serializers.serialize('json', query)
-        return HttpResponse(analytics_data, content_type='application/json')
-    else:
-        context = {'analytics': query}
-        return render(request, "index/analytics.html", context=context)
+    analytics_data = serializers.serialize(format='json', queryset=query)
+
+    return response_data(data=analytics_data, status=200, message="Request completed successfully.")
+    # return HttpResponse(analytics_data)
+
+
+def analytics_page(request):
+    query = Analytics.objects.all()
+
+    context = {'analytics': query}
+    return render(request, "index/analytics.html", context=context)

@@ -1,12 +1,15 @@
+import json
 from random import randint
 from string import ascii_letters, digits
 
+from django.http import HttpRequest, HttpResponse
 
-def is_ajax(request):
+
+def is_ajax(request: HttpRequest) -> bool:
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
-def hash_string(self, length: int = 16) -> str:
+def hash_string(length: int = 16) -> str:
     random_string = ''
 
     source_string = ascii_letters+digits
@@ -16,3 +19,12 @@ def hash_string(self, length: int = 16) -> str:
         random_string += source_string[randint(0, size)]
 
     return random_string
+
+
+def response_data(data=None, status=200, message=None) -> HttpResponse:
+    response = {
+        "status": status,
+        "message": message,
+        "data": data
+    }
+    return HttpResponse(json.dumps(response), content_type="application/json", status=status)

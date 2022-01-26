@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.db.models import Case, When
 from django.http import FileResponse, HttpResponse
 from helpers.functions import is_ajax
@@ -7,6 +8,7 @@ import json
 
 
 # Create your views here.
+@login_required
 def index(request):
     results = Survey.objects.select_related('recipient').only('recipient__name',
                                                               'recipient__institution',

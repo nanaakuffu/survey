@@ -25,13 +25,15 @@ const plotChart = (data, ctx) => {
         label: "Responses",
         backgroundColor: "rgba(2,117,216,1)",
         borderColor: "rgba(2,117,216,1)",
-        barThickness: 7,
+        barThickness: 5,
         data: dataValues,
       },
     ],
   };
 
   let chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       yAxes: [{ ticks: { fontSize: 14 } }],
       xAxes: [{ ticks: { min: 0, fontSize: 14 } }],
@@ -81,17 +83,6 @@ function getCookie(name) {
   }
   return cookieValue;
 }
-
-// function reLoad() {
-//   let reFresh = setTimeout(reLoad, 5000);
-//   $.getJSON("/home", "", function (data) {
-//     const sent = data.sent <= 1 ? " e-Mail sent!" : " e-Mails sent!";
-//     $("#eMails").text(data.sent + sent);
-
-//     let response = data.response <= 1 ? " has responded" : " have responded";
-//     $("#eMailRes").text(data.response + response);
-//   });
-// }
 
 $(function () {
   var loadingDialog = Notiflix.Loading;
@@ -352,26 +343,6 @@ $(function () {
     }
   });
 
-  $("#loginForm").on("submit", function (e) {
-    e.preventDefault();
-
-    $.ajax({
-      url: "_login.php",
-      method: "POST",
-      data: $("#loginForm").serialize(),
-      type: "json",
-      success: function (responseData) {
-        let jObj = JSON.parse(responseData);
-        if (jObj.status == "success") {
-          window.location.href = "index.php";
-        } else {
-          $("#logAlert").show();
-          $("#logAlert").html(jObj.message);
-        }
-      },
-    });
-  });
-
   $("#question").editableSelect({
     filter: true,
     effects: "slide",
@@ -391,24 +362,6 @@ $(function () {
     filter: true,
     effects: "slide",
   });
-
-  $("#dataTable").DataTable({
-    paging: true,
-    searching: true,
-    ordering: true,
-    info: true,
-    autoWidth: true,
-  });
-
-  $('.dataTables_filter input[type="search"]')
-    .attr("placeholder", "Search this table...")
-    .css({
-      width: "250px",
-      height: "40px",
-      padding: "6px 12px",
-      display: "inline-block",
-      "font-size": "16px",
-    });
 
   $("#eSelect").editableSelect({
     filter: true,
@@ -431,7 +384,8 @@ $(function () {
       },
     });
 
-  $.getJSON("/survey/analytics", function (data) {
+  $.getJSON("/survey/analytics/data", function (response) {
+    const data = JSON.parse(response.data);
     $(".chart").each(function (index, element) {
       var ctx = element.getContext("2d");
       // The data serialize by django serialise comes in the format

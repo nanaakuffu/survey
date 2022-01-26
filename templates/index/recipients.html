@@ -10,8 +10,7 @@
         <h4 class="card-title card-title-dash mt-1">Recipients</h4>
       </div>
 
-      <a href='#' class='btn btn-primary shadow float-right' data-bs-toggle="modal" data-bs-target='#AddModal'
-        title='Add question Data'><i class='fas fa-plus'></i> Add Recipient
+      <a href='#' class='btn btn-primary shadow float-right' id="addRecipient"><i class='fas fa-plus'></i> Add Recipient
       </a>
     </div>
     <hr />
@@ -43,10 +42,12 @@
             <td>{{ recipient.contact_number }}</td>
             <td>{{ recipient.institution }}</td>
             <td>
-              <a class="btn btn-primary" href='#EditModal' data-bs-toggle='modal' data-bs-target='#EditModal'
-                data-id='{{ recipient.id }}'>
-                <i class="fas fa-pencil-alt"></i>
+              <a class="btn btn-primary" onclick="viewRecipientData('{{ recipient.id }}')">
+                <em class="fas fa-pencil-alt"></em>
               </a>
+              <button type="button" class="btn btn-danger" onclick="sendSurveyEmail('{{ recipient.id }}')">
+                <em class="fas fa-paper-plane"></em>
+              </button>
             </td>
           </tr>
           {% endfor %}
@@ -59,38 +60,39 @@
 
 
 <!-- Beginning of Add Modal -->
-<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
+<div class="modal fade" id="recipientModal" tabindex="-1" role="dialog" aria-labelledby="recipientModalLabel">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="AddModalLabel"> Add Recipient Data </h3>
+        <h3 class="modal-title" id="recipientModalLabel"> Recipient Data </h3>
       </div>
 
       <div class="modal-body">
-        <div class="box-body pad">
-          <form id="addForm" action="{% url 'saverecipient' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class='form-group'>
-              <input type='text' class='form-control' name='name' id='name' placeholder='Recipient Full Name' required>
-            </div>
-            <div class='form-group'>
-              <input type='text' class='form-control' name='email' id='email' placeholder='Recipient Email Address'
-                required>
-            </div>
-            <div class='form-group'>
-              <input type='text' class='form-control' name='contact' id='contact' placeholder='Recipient Contact Number'
-                required>
-            </div>
-            <div class='form-group'>
-              <input type='text' class='form-control' name='institution' id='institution'
-                placeholder='Recipient Institution' required>
-            </div>
-          </form>
-        </div>
+
+        <form id="recipient-form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="text" class="d-none" id="id" name="id">
+          <div class='mb-3'>
+            <input type='text' class='form-control' name='name' id='name' placeholder='Recipient Full Name' required>
+          </div>
+          <div class='mb-3'>
+            <input type='text' class='form-control' name='email' id='email' placeholder='Recipient Email Address'
+              required>
+          </div>
+          <div class='mb-3'>
+            <input type='text' class='form-control' name='contact_number' id='contact_number'
+              placeholder='Recipient Contact Number' required>
+          </div>
+          <div class='mb-1'>
+            <input type='text' class='form-control' name='institution' id='institution'
+              placeholder='Recipient Institution' required>
+          </div>
+        </form>
+
       </div>
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary track" form='addForm' value="addData"> Save Data </button>
+        <button type="submit" class="btn btn-primary" form='recipient-form' id="saveRecipient"> Save Data </button>
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"> Cancel </button>
       </div>
 
@@ -99,52 +101,4 @@
 </div>
 <!-- End of Add Modal -->
 
-<!-- Beginning of Edit Modal -->
-<div class="modal hide fade" id="EditModal" tabindex="-1" data-focus-on="input:first" aria-hidden='true'>
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="EditModalLabel"> Edit Recipient Data </h3>
-      </div>
-
-      <div class="modal-body">
-        <div class="box-body pad">
-          <form id="editForm" action="{% url 'updaterecipient' %}" method='POST' enctype="multipart/form-data">
-            {% csrf_token %}
-            <input name='table' type='hidden' value='rec'>
-            <input name='key' id="key" type='hidden' value=''>
-            <div class='form-group'>
-              <input type='text' class='form-control' name='name' id='e_name' placeholder='Recipient Full Name'
-                required>
-            </div>
-            <div class='form-group'>
-              <input type='text' class='form-control' name='email' id='e_email' placeholder='Recipient Email Address'
-                required>
-            </div>
-            <div class='form-group'>
-              <input type='text' class='form-control' name='contact' id='e_contact'
-                placeholder='Recipient Contact Number' required>
-            </div>
-            <div class='form-group'>
-              <input type='text' class='form-control' name='institution' id='e_institution'
-                placeholder='Recipient Institution' required>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-primary" type="submit" id="editingData" form="editForm" name="flag" value="update">
-          Update </button>
-        <button type="button" class="btn btn-primary" id="sendSurvey" form='editForm' value="sendData"> Send Survey
-        </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"> Cancel </button>
-      </div>
-
-    </div>
-  </div>
-</div>
-<!-- End of Edit Modal -->
-{% block js_files %}
-{% endblock %}
 {%endblock%}
