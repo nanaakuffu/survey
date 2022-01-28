@@ -8,7 +8,7 @@ const formElements = document.querySelectorAll(
   "#recipient-form input[type=text]"
 );
 
-const form = document.getElementById("recipient-form");
+const recipientForm = document.getElementById("recipient-form");
 
 const recipientId = document.getElementById("id");
 
@@ -54,7 +54,7 @@ saveRecipientDetails.addEventListener("click", (e) => {
   const id = recipientId.value;
   const url = id > 0 ? `/recipients/${id}/update` : "/recipients";
 
-  const formData = new FormData(form);
+  const formData = new FormData(recipientForm);
 
   fetch(url, {
     method: "POST",
