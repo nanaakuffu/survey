@@ -1,13 +1,19 @@
-body, html {
+body,
+html {
   height: 100%;
   margin: 0;
   font-family: GoogleSans;
-  font-size: 18px;
-  background-color: #0E2336;   /* ; #292942; #2E75B5*/
+  font-size: 22px;
+  background-color: #0e2336; /* ; #292942; #2E75B5*/
   color: white;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   /* font-family: 'Roboto'; */
   font-weight: 400;
 }
@@ -46,13 +52,13 @@ label {
   padding: 20px;
   font-weight: 200;
 }
-.my-shadow{
+.my-shadow {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.footer-shadow{
+.footer-shadow {
   box-shadow: 0 -4px 20px 0 rgba(255, 255, 255, 0.5);
 }
-.button-shadow:hover{
+.button-shadow:hover {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -70,8 +76,8 @@ ol {
 }
 
 .paragraph {
-  font-size:16px;
-  font-weight:400;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .mask {
@@ -83,7 +89,7 @@ ol {
   position: relative;
   margin: 0 auto;
   /* The image used */
-  background-image: url('./../img/survey_logo.jpg');
+  background-image: url("/home/survey_logo/img");
 
   /* Set a specific height */
   height: 100%;
@@ -97,7 +103,7 @@ ol {
 
 .content {
   position: absolute; /* Position the background text */
-  bottom:0;
+  bottom: 0;
   background: rgb(0, 0, 0); /* Fallback color */
   background: rgba(0, 0, 0, 0.7); /* Black background with 0.5 opacity */
   color: #f1f1f1; /* Grey text */
@@ -107,7 +113,7 @@ ol {
 
 .overlay {
   position: absolute; /* Position the background text */
-  bottom:0;
+  bottom: 0;
   top: 0;
   height: 100%;
   background: rgb(0, 0, 0); /* Fallback color */
@@ -166,7 +172,7 @@ ol {
 
 /* When the radio button is checked, add a blue background */
 .holder input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 /* Create the indicator (the dot/circle - hidden when not checked) */
@@ -183,14 +189,13 @@ ol {
 
 /* Style the indicator (dot/circle) */
 .holder .checkmark:after {
- 	top: 9px;
-	left: 9px;
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	background: white;
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
 }
-
 
 /* =========================================================================================== */
 .steps {
@@ -221,7 +226,7 @@ ol {
   text-align: center;
 
   padding-top: 0;
-  padding-left:0;
+  padding-left: 0;
   left: -7%;
   top: -0.65em;
   height: 1.35em;
@@ -238,7 +243,7 @@ ol {
     border-radius: 35%;
     font-size: 1.5em;
     height: 1.35em;
-    margin-left: 2.0%;
+    margin-left: 2%;
     padding-left: 0;
     padding-top: 0;
     top: 0; /*-0.15em;*/
@@ -260,7 +265,8 @@ ol {
   line-height: 46px;
 }
 
-.scroll-to-top:focus, .scroll-to-top:hover {
+.scroll-to-top:focus,
+.scroll-to-top:hover {
   color: white;
 }
 

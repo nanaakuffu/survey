@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Case, When
 from django.http import FileResponse, HttpResponse
-from helpers.functions import is_ajax
+from helpers.functions import is_ajax, response_data
 from survey.models import Survey
 import json
+import os
 
 
 # Create your views here.
@@ -31,6 +32,20 @@ def home(request):
 
 
 def get_pdf_file(request, file_name):
-    __file = open("static/survey/files/"+file_name+".pdf", 'rb')
+    __file_string = f"static/survey/files/{file_name}.pdf"
 
-    return FileResponse(__file)
+    if os.path.isfile(__file_string):
+        __pdf_file = open(f"static/survey/files/{file_name}.pdf", 'rb')
+
+        return FileResponse(__pdf_file)
+    else:
+        status = 404
+        message = "File does not exist"
+
+        return response_data(status=status, message=message)
+
+
+def get_image(request, img_name):
+    __image_file = open(f"static/survey/img/{img_name}.jpg", 'rb')
+
+    return FileResponse(__image_file)

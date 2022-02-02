@@ -1,57 +1,52 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Survey</title>
-        <meta name="google" content="notranslate" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/w3.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/bootstrap.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/css/all.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/fonts.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/jquery-editable-select.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/dataTables.bootstrap4.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'survey/css/survey2.css' %}" />
-    </head>
 
-    <body id='page-top'>
-        {% block content %}
-        <!-- Content Goes here -->
-        {% endblock content %}
-        <!-- Footer -->
-        <footer class='py-3 text-white-50 footer-shadow bg-dark'>
-            <div class='container my-auto'>
-              <div class='text-left my-auto' style='font-family: Raleway'>
-                Copyright &copy; <span style='font-family: GoogleSans'>{% now 'Y' %}</span> | Created for SafeCare Ghana. All rights
-              reserved.
-              </div>
-            </div>
-          </footer>
+<head>
+  <title>Survey</title>
+  <meta name="google" content="notranslate" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/w3.css' %}" /> -->
+  <link rel="stylesheet" type="text/css" href="{% static 'survey/css/vendor/bootstrap.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'survey/font/fonts.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'survey/css/app/survey2.css' %}" />
+</head>
 
-        <!-- Back to top -->
-        <a class='scroll-to-top rounded-circle shadow' href='#page-top'>
-          <i class='fas fa-angle-up'></i>
-        </a>
+<body id='page-top'>
+  {% block content %}
+  <!-- Content Goes here -->
+  {% endblock content %}
+  <!-- Footer -->
+  <footer class='py-3 text-white-50 footer-shadow bg-dark'>
+    <div class='container my-auto'>
+      <div class='text-left my-auto' style='font-family: Raleway'>
+        Copyright &copy; <span style='font-family: GoogleSans'>{% now 'Y' %}</span> | Created for SafeCare Ghana. All
+        rights
+        reserved.
+      </div>
+    </div>
+  </footer>
 
-        <!-- Bootstrap core JavaScript -->
-        <script src="{% static 'survey/js/jquery.min.js' %}"></script>
-        <script src="{% static 'survey/js/bootstrap.min.js' %}"></script>
+  <!-- Back to top -->
+  <a class='scroll-to-top rounded-circle shadow' href='#page-top'>
+    <i class='fas fa-angle-up'></i>
+  </a>
 
-        <!-- Core plugin JavaScript -->
-        <script src="{% static 'survey/js/jquery.easing.min.js' %}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        <!-- Page level plugin JavaScript -->
-        <script src="{% static 'survey/js/Chart.min.js' %}"></script>
-        <script src="{% static 'survey/js/jquery.dataTables.min.js' %}"></script>
-        <script src="{% static 'survey/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'survey/js/vendor/bootstrap.min.js' %}"></script>
 
+  <!-- Core plugin JavaScript -->
+  <script src="{% static 'survey/js/vendor/jquery.easing.min.js' %}"></script>
 
-        <!-- Demo scripts for this page -->
-        <script src="{% static 'survey/js/jquery-editable-select.min.js' %}"></script>
-        <script src="{% static 'survey/js/jqBootstrapValidation.js' %}"></script>
-        <script src="{% static 'survey/js/bootbox.min.js' %}" ></script>
-        <script src="{% static 'survey/js/notiflix-aio-2.1.2.min.js' %}"></script>
+  <!-- Demo scripts for this page -->
+  <script src="{% static 'survey/js/vendor/jqBootstrapValidation.js' %}"></script>
+  <script src="{% static 'survey/js/vendor/notiflix-aio-3.2.2.min.js' %}"></script>
 
-        <script src="{% static 'survey/js/survey.js' %}"></script>
-    </body>
+  <script src="{% static 'survey/js/app/response.js' %}"></script>
+</body>
+
 </html>

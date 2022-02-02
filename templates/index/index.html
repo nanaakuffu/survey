@@ -68,8 +68,8 @@
             <td>{{ result.hasresponded|yesno:"Yes,No" }} </td>
             <td>{{ result.date_responded|default:"Not yet" }}</td>
             <td>{{ result.recipient.survey_link }} </td>
-            <td> {% if result.file_name %} <a href="{% url 'pdf_file' result.file_name %}" class="btn btn-danger"> <i
-                  class="fas fa-download"></i></a> {% endif %} </td>
+            <td> {% if result.file_name %} <a href="{% url 'pdf_file' result.file_name %}" class="btn btn-danger"
+                target="_blank"> <i class="fas fa-download"></i></a> {% endif %} </td>
           </tr>
           {% endfor%}
         </tbody>

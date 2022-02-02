@@ -19,19 +19,21 @@ from random import randint
 from datetime import date
 import json
 
+SUCCESS_MESSAGE = "Request completed successfully."
 
 # Create your views here.
-def send_survey(request):
 
+
+def send_survey(request):
     recipient = Recipient.objects.get(id=request.POST.get('id'))
 
     recipient_id = recipient.id
     recipient_email = [recipient.email]
     survey_id = str(randint(1000000, 9999999))
     sender = settings.EMAIL_HOST_USER
-    link_prefix = request.scheme+"://"+request.get_host
-    survey_link = link_prefix+"/survey/survey?id=" + recipient_id + "&sid=" + survey_id + "&mid=" + \
-        recipient_email[0]
+    link_prefix = request.scheme+"://"+request.get_host()
+
+    survey_link = f'{link_prefix}/survey?id={recipient_id}&sid={survey_id}&mid={recipient_email[0]}'
 
     email_message = "<p> Dear Sir/Madam, </p> \
                         <p> PharmAccess Ghana welcomes you to its self-administered basic quality assessment tool. </p> \
@@ -65,14 +67,14 @@ def send_survey(request):
 
             # Send the response to the  ajax and then to template
             status = 200
-            message = "Request completed successfully."
+            message = SUCCESS_MESSAGE
         else:
             # Sending was unsuccessful. Report on that
             status = 500
-            message = "Request completed successfully."
+            message = "Sorry an occured while sending the survey. Please try again."
     else:
-        status = 204
-        message = "Request completed successfully."
+        status = 400
+        message = "This recipient has already been served."
 
     return response_data(status=status, message=message)
 
@@ -91,7 +93,7 @@ def get_questions(request):
         # If 1 then recipient exist else no
         recipient_exists = Recipient.objects.filter(id=recipient_id).count()
 
-        # Set the date for the durvey
+        # Set the date for the survey
         survey_date = date.today()
 
         # Create the context for the template
@@ -101,7 +103,7 @@ def get_questions(request):
             'email': e_mail,
             'survey': survey_id,
             'survey_date': survey_date,
-            'hasResponded': survey.hasresponded,
+            'has_responded': survey.hasresponded,
             'recipient_exists': recipient_exists
         }
 
@@ -141,7 +143,7 @@ def process_survey(request):
                 ]
                 counter += 1
 
-    file_name = './static/survey/files/' + random_file_name + '.pdf'
+    file_name = f'./static/survey/files/{random_file_name}.pdf'
 
     # Print those which needs recommendation to pdf
     report = PDF(file_name, 'A4')
@@ -200,11 +202,10 @@ def sent_page(request):
 
 
 def get_analytics(request):
-    query = Analytics.objects.all()
-    analytics_data = serializers.serialize(format='json', queryset=query)
+    query = Analytics.objects.all().values()
+    data = [item for item in query]
 
-    return response_data(data=analytics_data, status=200, message="Request completed successfully.")
-    # return HttpResponse(analytics_data)
+    return response_data(data=data, status=200, message="Request completed successfully.")
 
 
 def analytics_page(request):

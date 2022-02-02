@@ -2,7 +2,7 @@ import json
 from random import randint
 from string import ascii_letters, digits
 
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 
 
 def is_ajax(request: HttpRequest) -> bool:
@@ -27,4 +27,5 @@ def response_data(data=None, status=200, message=None) -> HttpResponse:
         "message": message,
         "data": data
     }
-    return HttpResponse(json.dumps(response), content_type="application/json", status=status)
+
+    return JsonResponse(data=response, status=status)

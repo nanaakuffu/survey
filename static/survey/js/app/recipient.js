@@ -39,9 +39,32 @@ const viewRecipientData = (id) => {
 };
 
 const sendSurveyEmail = (id) => {
-  fetch(`/survey/send-survey`, {
+  const data = new FormData();
+  data.append("id", id);
+
+  Notiflix.Block.circle("#dataTable", "Sending email...", {
+    svgSize: "80px",
+  });
+
+  const csrftoken = getCookie("csrftoken");
+  fetch(`/survey/send`, {
+    headers: { "X-CSRFToken": csrftoken },
     method: "POST",
-    body: { id },
+    body: data,
+  }).then(async (response) => {
+    const responseData = await response.json();
+
+    Notiflix.Block.remove("#dataTable");
+
+    if (responseData.status === 200) {
+      Notiflix.Report.success("Survey Sent", `${responseData.message}`, "OK");
+    } else {
+      Notiflix.Report.failure(
+        "Sending Error",
+        `${responseData.message}`,
+        "Ok!"
+      );
+    }
   });
 };
 

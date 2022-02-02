@@ -48,21 +48,6 @@ const plotChart = (data, ctx) => {
   });
 };
 
-Notiflix.Loading.Init({
-  className: "notiflix-loading",
-  zindex: 4000,
-  backgroundColor: "rgba(0,0,0,0.8)",
-  useGoogleFont: true,
-  fontFamily: "Raleway",
-  cssAnimation: true,
-  cssAnimationDuration: 400,
-  clickToClose: false,
-  messageID: "NotiflixLoadingMessage",
-  messageFontSize: "15px",
-  messageMaxLength: 34,
-  messageColor: "#dcdcdc",
-});
-
 function csrfSafeMethod(method) {
   // these HTTP methods do not require CSRF protection
   return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
@@ -190,40 +175,6 @@ $(function () {
       $("#e_institution").val(data.institution);
       $("#key").val(id);
     });
-  });
-
-  $("#surveyResponseForm").on("submit", function (e) {
-    e.preventDefault();
-
-    let formData = $("#surveyResponseForm").serialize();
-
-    // alert(formData);
-
-    if (formData.split("&").length == 27) {
-      // Start the indicator
-      loadingDialog.Circle();
-
-      // Send the survey
-      $.ajax({
-        method: "POST",
-        url: "/survey/process",
-        data: formData,
-        type: "json",
-        success: function (responseData) {
-          loadingDialog.Remove();
-
-          if (responseData.status != 200) {
-            reportDialog.Failure(
-              "Survey Feedback",
-              `${responseData.message}. Meaning: Your responses could not be sent. It may be due to bad internet connection or wrong email address. Please contact PharmAccess for help`,
-              "Ok! Thanks."
-            );
-          } else {
-            window.location.href = "/survey/sent";
-          }
-        },
-      });
-    }
   });
 
   $("#sendSurvey").on("click", function (e) {
@@ -385,14 +336,12 @@ $(function () {
     });
 
   $.getJSON("/survey/analytics/data", function (response) {
-    const data = JSON.parse(response.data);
+    const data = response.data;
     $(".chart").each(function (index, element) {
       var ctx = element.getContext("2d");
       // The data serialize by django serialise comes in the format
       // Hence we access it this way
-      plotChart(data[index].fields.responses, ctx);
+      plotChart(data[index].responses, ctx);
     });
   });
-
-  // reLoad();
 });
